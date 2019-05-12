@@ -21,4 +21,13 @@ class Common
 
     //一次最多加载500条数据
     const ONCE_MAX_COUNT = 500;
+
+    //男
+    const SEX_MAN = 1;
+
+    //女
+    const SEX_WOMAN = 2;
+
+    //性别展示
+    const SEX_SHOW = [self::SEX_MAN => '男', self::SEX_WOMAN => '女'];
 }

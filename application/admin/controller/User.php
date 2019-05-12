@@ -6,6 +6,7 @@ use app\admin\service\UserService;
 use app\common\controller\Base;
 use app\constants\ErrorCode;
 use think\Request;
+use \app\admin\model\User as UserModel;
 
 class User extends Base
 {
@@ -42,6 +43,7 @@ class User extends Base
      */
     public function userAdd(Request $request)
     {
+        $data['name'] = $request->param('name');
         $data['username'] = $request->param('username');
         $data['password'] = $request->param('password');
         $data['sex'] = $request->param('sex');
@@ -52,6 +54,14 @@ class User extends Base
             $this->errorJson(ErrorCode::PARAM_INVALID, $result);
         }
 
-
+        //执行写入
+        $userModel = new UserModel();
+        $userModel->data($data, true);
+        $flag = $userModel->save();
+        if ($flag) {
+            $this->successJson('添加用户成功');
+        } else {
+            $this->errorJson(ErrorCode::PARAM_INVALID, '添加用户失败');
+        }
     }
 }

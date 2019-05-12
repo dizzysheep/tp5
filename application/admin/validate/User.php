@@ -7,14 +7,10 @@ use think\Validate;
 class User extends Validate
 {
     protected $rule = [
-        'username' => 'require|max:32',
+        'username' => 'require|unique:user|max:32',
+        'name' => 'require|max:32',
         'password' => 'require|max:12',
+        'sex' => 'require|in:1,2',
     ];
 
-    protected $message = [
-        'username.require' => '用户名不能为空',
-        'username.max' => '用户名最多不能超过32个字符',
-        'password.require' => '密码不能为空',
-        'password.max' => '用户名最多不能超过12个字符',
-    ];
 }
