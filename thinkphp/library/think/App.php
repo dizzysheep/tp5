@@ -87,7 +87,7 @@ class App
             } elseif ($config['auto_bind_module']) {
                 // 入口自动绑定
                 $name = pathinfo($request->baseFile(), PATHINFO_FILENAME);
-                if ($name && 'index' != $name && is_dir(APP_PATH . $name)) {
+                if ($name && 'admin' != $name && is_dir(APP_PATH . $name)) {
                     Route::bind($name);
                 }
             }

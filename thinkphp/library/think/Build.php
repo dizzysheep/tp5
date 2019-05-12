@@ -117,7 +117,7 @@ class Build
         // 未指定文件和目录，则创建默认的模块目录和文件
         if (empty($list)) {
             $list = [
-                '__file__' => ['config.php', 'common.php'],
+                '__file__' => ['config.php', 'Common.php'],
                 '__dir__'  => ['controller', 'model', 'view'],
             ];
         }
@@ -218,7 +218,7 @@ class Build
             file_put_contents($config, "<?php\n//配置文件\nreturn [\n\n];");
         }
 
-        $common = APP_PATH . ($module ? $module . DS : '') . 'common.php';
+        $common = APP_PATH . ($module ? $module . DS : '') . 'Common.php';
         if (!is_file($common)) file_put_contents($common, "<?php\n");
     }
 

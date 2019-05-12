@@ -2,10 +2,10 @@
 /**
  * 用法：
  * load_trait('controller/Jump');
- * class index
+ * class admin
  * {
  *     use \traits\controller\Jump;
- *     public function index(){
+ *     public function admin(){
  *         $this->error();
  *         $this->redirect();
  *     }

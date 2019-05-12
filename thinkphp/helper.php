@@ -291,7 +291,7 @@ if (!function_exists('session')) {
      * @param string        $prefix 前缀
      * @return mixed
      */
-    function session($name, $value = '', $prefix = null)
+    function Sessionsession($name, $value = '', $prefix = null)
     {
         if (is_array($name)) {
             // 初始化
