@@ -3,9 +3,9 @@
 namespace app\admin\controller;
 
 use app\admin\model\User;
-use app\admin\service\UserService;
 use app\common\controller\Base;
 use app\constants\ErrorCode;
+use app\Func;
 use think\Request;
 use think\Session;
 
@@ -42,8 +42,8 @@ class Login extends Base
             $this->errorJson(ErrorCode::PARAM_INVALID, '账号或密码错误');
         }
 
-        //登录处理
-        (new UserService())->login($userInfo);
+        //登录逻辑处理
+        Func::loadService('user')->login($userInfo);
 
         $this->successJson('登录成功');
     }

@@ -10,13 +10,3 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
-
-/**
- * @desc json格式化数据
- * @param $data
- * @return false|string
- */
-function jsonEncode($data)
-{
-    return json_encode($data, JSON_UNESCAPED_UNICODE);
-}

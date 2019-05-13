@@ -2,10 +2,10 @@
 
 namespace app\admin\controller;
 
-use app\admin\service\UserService;
 use app\common\controller\Base;
 use app\constants\Common;
 use app\constants\ErrorCode;
+use app\Func;
 use think\Request;
 use \app\admin\model\User as UserModel;
 
@@ -25,10 +25,10 @@ class User extends Base
         $pageNo = $request->param('page_no');
         $pageSize = $request->param('page_size');
 
-        $userService = new UserService();
+        $userService = Func::loadService('user');
         $data['total'] = $userService->getCount($params);
         if ($data['total'] > 0) {
-            $data['item'] = (new UserService())->getList($pageNo, $pageSize, $params);
+            $data['item'] = $userService->getList($pageNo, $pageSize, $params);
         }
 
         return $this->successJson('查询成功', $data);
