@@ -4,9 +4,12 @@ namespace app\admin\model;
 
 use app\constants\Common;
 use think\Model;
+use traits\model\SoftDelete;
 
 class User extends Model
 {
+    use SoftDelete;
+
     /**
      * @desc 主键
      * @var string
@@ -24,6 +27,12 @@ class User extends Model
      * @var array
      */
     protected $readonly = ['username'];
+
+    /**
+     * @desc 自动写入时间戳
+     * @var bool
+     */
+    protected $autoWriteTimestamp = true;
 
     /**
      * @desc 密码加密

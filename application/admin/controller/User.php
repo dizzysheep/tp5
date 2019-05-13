@@ -15,10 +15,6 @@ class User extends Base
      * @desc 查询类标数据
      * @link /user/userList
      * @param Request $request
-     * @throws \think\Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
     public function userList(Request $request)
     {
@@ -93,9 +89,9 @@ class User extends Base
         $userModel = new UserModel();
         $flag = $userModel->save($data, ['user_id' => $user->user_id]);
         if ($flag) {
-            $this->successJson('添加用户成功');
+            $this->successJson('修改用户信息成功');
         } else {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '修改数据成功');
+            $this->errorJson(ErrorCode::PARAM_INVALID, '修改用户信息失败');
         }
     }
 
@@ -132,6 +128,27 @@ class User extends Base
     }
 
     /**
+     * @desc 用户删除
+     * @link /user/userDel
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function userDel()
+    {
+        $userId = $this->request->param('user_id');
+        $user = $this->_userInfoExist($userId);
+
+        //删除数据
+        $flag = $user->delete();
+        if ($flag) {
+            $this->successJson('删除用户成功');
+        } else {
+            $this->errorJson(ErrorCode::PARAM_INVALID, '删除用户失败');
+        }
+    }
+
+    /**
      * @desc 验证用户信息是否存在
      * @param $userId
      * @return array|false|\PDOStatement|string|\think\Model
@@ -141,6 +158,10 @@ class User extends Base
      */
     private function _userInfoExist($userId)
     {
+        if (empty($userId)) {
+            $this->errorJson(ErrorCode::PARAM_INVALID, 'user_id参数不合法');
+        }
+
         //用户信息查询
         $user = UserModel::find($userId);
         if (empty($user)) {

@@ -37,6 +37,8 @@ class UserService
     protected function buildWhere($params)
     {
         $user = new User();
+
+        //search_key参数需要特殊处理
         if ($params['search_key']) {
             $user->whereOr([
                 'phone' => $params['search_key'],
@@ -44,7 +46,6 @@ class UserService
                 'name' => ['like', "%" . $params['search_key'] . "%"],
             ]);
         }
-
 
         return $user;
     }
