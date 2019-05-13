@@ -25,7 +25,7 @@ class Login extends Base
         $data['password'] = $request->param('password');
 
         //数据验证
-        $result = $this->validate($data, 'app\admin\validate\Login');
+        $result = $this->validate($data, 'app\admin\validate\LoginValid');
         if ($result !== true) {
             $this->errorJson(ErrorCode::PARAM_INVALID, $result);
         }

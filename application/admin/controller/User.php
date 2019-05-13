@@ -49,7 +49,7 @@ class User extends Base
         $data['sex'] = $request->param('sex');
 
         //参数校验
-        $result = $this->validate($data, '\app\admin\validate\User');
+        $result = $this->validate($data, '\app\admin\validate\UserValid');
         if ($result !== true) {
             $this->errorJson(ErrorCode::PARAM_INVALID, $result);
         }
@@ -62,6 +62,39 @@ class User extends Base
             $this->successJson('添加用户成功');
         } else {
             $this->errorJson(ErrorCode::PARAM_INVALID, '添加用户失败');
+        }
+    }
+
+    /**
+     * @desc 用户编辑
+     * @link /admin/user/userEdit
+     * @param Request $request
+     * @throws \think\exception\DbException
+     */
+    public function userEdit(Request $request)
+    {
+        $data['name'] = $request->param('name');
+        $data['sex'] = $request->param('sex');
+        $id = $request->param('id');
+
+        //参数校验
+        $result = $this->validate($data, '\app\admin\validate\UserValid.edit');
+        if ($result !== true) {
+            $this->errorJson(ErrorCode::PARAM_INVALID, $result);
+        }
+
+        $user = UserModel::get($id);
+        if (empty($user)) {
+            $this->errorJson(ErrorCode::PARAM_INVALID, '用户信息不存在');
+        }
+
+        //执行写入
+        $userModel = new UserModel();
+        $flag = $userModel->save($data, ['user_id' => $id]);
+        if ($flag) {
+            $this->successJson('添加用户成功');
+        } else {
+            $this->errorJson(ErrorCode::PARAM_INVALID, '修改数据成功');
         }
     }
 }

@@ -4,7 +4,7 @@ namespace app\admin\validate;
 
 use think\Validate;
 
-class User extends Validate
+class UserValid extends Validate
 {
     protected $rule = [
         'username' => 'require|unique:user|max:32',
@@ -13,4 +13,7 @@ class User extends Validate
         'sex' => 'require|in:1,2',
     ];
 
+    protected $scene = [
+        'edit' => ['name', 'sex'],
+    ];
 }

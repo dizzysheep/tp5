@@ -809,7 +809,7 @@ class Route
                         // 绑定到命名空间 例如 \app\admin\behavior
                         self::$bind = ['type' => 'namespace', 'namespace' => $result];
                     } elseif (0 === strpos($result, '@')) {
-                        // 绑定到类 例如 @app\admin\controller\User
+                        // 绑定到类 例如 @app\admin\controller\UserValid
                         self::$bind = ['type' => 'class', 'class' => substr($result, 1)];
                     } else {
                         // 绑定到模块/控制器 例如 admin/user
