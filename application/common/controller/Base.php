@@ -105,6 +105,7 @@ class Base extends Controller
     public function returnJson($code, $msg = '', $data = [])
     {
         json(['code' => $code, 'msg' => $msg, 'data' => $data])->send();
+        die;
     }
 
 }

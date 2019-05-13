@@ -7,6 +7,8 @@ use think\Model;
 
 class User extends Model
 {
+    protected $pk = 'user_id';
+
     /**
      * @desc 密码加密
      * @param $value

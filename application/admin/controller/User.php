@@ -46,6 +46,7 @@ class User extends Base
         $data['name'] = $request->param('name');
         $data['username'] = $request->param('username');
         $data['password'] = $request->param('password');
+        $data['phone'] = $request->param('phone');
         $data['sex'] = $request->param('sex');
 
         //参数校验
