@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use app\admin\service\UserService;
 use app\common\controller\Base;
+use app\constants\Common;
 use app\constants\ErrorCode;
 use think\Request;
 use \app\admin\model\User as UserModel;
@@ -12,7 +13,7 @@ class User extends Base
 {
     /**
      * @desc 查询类标数据
-     * @link /admin/user/userList
+     * @link /user/userList
      * @param Request $request
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
@@ -21,7 +22,8 @@ class User extends Base
      */
     public function userList(Request $request)
     {
-        $params = [];
+        //用户搜索条件处理
+        $params['search_key'] = $request->param('search_key');
 
         //分页信息
         $pageNo = $request->param('page_no');
@@ -38,7 +40,7 @@ class User extends Base
 
     /**
      * @desc 用户添加
-     * @link /admin/user/userAdd
+     * @link /user/userAdd
      * @param Request $request
      */
     public function userAdd(Request $request)
@@ -68,7 +70,7 @@ class User extends Base
 
     /**
      * @desc 用户编辑
-     * @link /admin/user/userEdit
+     * @link /user/userEdit
      * @param Request $request
      * @throws \think\exception\DbException
      */
@@ -76,7 +78,7 @@ class User extends Base
     {
         $data['name'] = $request->param('name');
         $data['sex'] = $request->param('sex');
-        $id = $request->param('id');
+        $userId = $request->param('user_id');
 
         //参数校验
         $result = $this->validate($data, '\app\admin\validate\UserValid.edit');
@@ -84,18 +86,68 @@ class User extends Base
             $this->errorJson(ErrorCode::PARAM_INVALID, $result);
         }
 
-        $user = UserModel::get($id);
-        if (empty($user)) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '用户信息不存在');
-        }
+        //用户信息处理
+        $user = $this->_userInfoExist($userId);
 
         //执行写入
         $userModel = new UserModel();
-        $flag = $userModel->save($data, ['user_id' => $id]);
+        $flag = $userModel->save($data, ['user_id' => $user->user_id]);
         if ($flag) {
             $this->successJson('添加用户成功');
         } else {
             $this->errorJson(ErrorCode::PARAM_INVALID, '修改数据成功');
         }
     }
+
+    /**
+     * @desc 用户状态切换
+     * @link /user/statusSwitch
+     * @throws \think\exception\DbException
+     */
+    public function statusSwitch()
+    {
+        //参数校验
+        $status = $this->request->param('status');
+        $userId = $this->request->param('user_id');
+        if (!in_array($status, [Common::SWITCH_OPEN, Common::SWITCH_CLONE])) {
+            $this->errorJson(ErrorCode::PARAM_INVALID, '参数不合法');
+        }
+
+        //用户信息处理
+        $user = $this->_userInfoExist($userId);
+
+        //重复操作
+        if ($user->status == $status) {
+            $this->errorJson(ErrorCode::PARAM_INVALID, '重复操作');
+        }
+
+        //更新数据
+        $flag = UserModel::where('user_id', $userId)
+            ->update(['status' => $status]);
+        if ($flag) {
+            $this->successJson('用户状态修改成功');
+        } else {
+            $this->errorJson(ErrorCode::PARAM_INVALID, '用户状态修改失败');
+        }
+    }
+
+    /**
+     * @desc 验证用户信息是否存在
+     * @param $userId
+     * @return array|false|\PDOStatement|string|\think\Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    private function _userInfoExist($userId)
+    {
+        //用户信息查询
+        $user = UserModel::find($userId);
+        if (empty($user)) {
+            $this->errorJson(ErrorCode::PARAM_INVALID, '用户信息不存在');
+        }
+
+        return $user;
+    }
+
 }

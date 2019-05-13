@@ -7,7 +7,23 @@ use think\Model;
 
 class User extends Model
 {
+    /**
+     * @desc 主键
+     * @var string
+     */
     protected $pk = 'user_id';
+
+    /**
+     * @desc 密码隐藏
+     * @var array
+     */
+    protected $hidden = ['password'];
+
+    /**
+     * @desc 用户名不允许修改
+     * @var array
+     */
+    protected $readonly = ['username'];
 
     /**
      * @desc 密码加密

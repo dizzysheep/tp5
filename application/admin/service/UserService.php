@@ -11,28 +11,48 @@ class UserService
      * @desc 获取分页数据
      * @param $pageNo
      * @param $pageSize
-     * @param $where
-     * @return false|\PDOStatement|string|\think\Collection
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @param array $params
+     * @return mixed
      */
-    public function getList($pageNo, $pageSize, $where)
+    public function getList($pageNo, $pageSize, $params = [])
     {
-        return User::where($where)->page($pageNo, $pageSize)->select();
+        return $this->buildWhere($params)->page($pageNo, $pageSize)->select();
     }
 
     /**
      * @desc 查询总数
-     * @param array $where
-     * @return int|string
-     * @throws \think\Exception
+     * @param array $params
+     * @return mixed
      */
-    public function getCount($where = [])
+    public function getCount($params = [])
     {
-        return User::where($where)->count();
+        return $this->buildWhere($params)->count();
     }
 
+    /**
+     * @desc 处理搜索条件
+     * @param $params
+     * @return mixed
+     */
+    protected function buildWhere($params)
+    {
+        $user = new User();
+        if ($params['search_key']) {
+            $user->whereOr([
+                'phone' => $params['search_key'],
+                'username' => ['like', "%" . $params['search_key'] . "%"],
+                'name' => ['like', "%" . $params['search_key'] . "%"],
+            ]);
+        }
+
+
+        return $user;
+    }
+
+    /**
+     * @desc 登录处理
+     * @param $userInfo
+     */
     public function login($userInfo)
     {
         Session::set('user_id', $userInfo->user_id);
