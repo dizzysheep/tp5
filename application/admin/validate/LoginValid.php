@@ -3,6 +3,8 @@
 namespace app\admin\validate;
 
 
+use app\common\validate\BaseValid;
+
 class LoginValid extends BaseValid
 {
     protected $rule = [

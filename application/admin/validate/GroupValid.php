@@ -9,6 +9,8 @@
 namespace app\admin\validate;
 
 
+use app\common\validate\BaseValid;
+
 class GroupValid extends BaseValid
 {
     protected $rule = [

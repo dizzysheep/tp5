@@ -6,6 +6,7 @@ use app\common\controller\Base;
 use app\constants\Common;
 use app\constants\ErrorCode;
 use app\Func;
+use think\Loader;
 use think\Request;
 use \app\admin\model\User as UserModel;
 
@@ -24,29 +25,32 @@ class User extends Base
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new UserModel();
+        $this->model = model('user');
     }
 
 
     /**
      * @desc 查询类标数据
-     * @link /user/userList
      * @param Request $request
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function userList(Request $request)
     {
         //用户搜索条件处理
         $params['search_key'] = $request->param('search_key');
+        $params['group_id'] = $request->param('group_id');
 
         //分页信息
         $pageNo = $request->param('page_no', Common::FIRST_PAGE);
         $pageSize = $request->param('page_size', Common::PAGE_SIZE);
 
         //查询数据
-        $userService = Func::loadService('user');
-        $data['total'] = $userService->getCount($params);
+        $data['total'] = $this->model->getCount($params);
         if ($data['total'] > 0) {
-            $data['item'] = $userService->getList($pageNo, $pageSize, $params);
+            $data['item'] = $this->model->getList($pageNo, $pageSize, $params);
         }
 
         successJson('查询成功', $data);
@@ -60,7 +64,7 @@ class User extends Base
     {
         //参数校验
         $data = Func::loadService('user')->checkParams();
-        $data['create_user'] = $this->userId;
+        $data['create_user_id'] = $this->userId;
 
         //执行写入
         $flag = $this->model->data($data, true)->save();
@@ -81,7 +85,7 @@ class User extends Base
     {
         //参数校验
         $data = Func::loadService('user')->checkParams('user', 'edit');
-        $data['update_user'] = $this->userId;
+        $data['update_user_id'] = $this->userId;
 
         //用户信息处理
         $userId = $request->param('user_id');
@@ -104,9 +108,11 @@ class User extends Base
     public function statusSwitch()
     {
         //参数校验
-        $status = $this->request->param('status');
+        $data['status'] = $this->request->param('status');
+        $data['update_user_id'] = $this->userId;
+
         $userId = $this->request->param('user_id');
-        if (!in_array($status, [Common::SWITCH_OPEN, Common::SWITCH_CLONE])) {
+        if (!in_array($data['status'], [Common::SWITCH_OPEN, Common::SWITCH_CLONE])) {
             errorJson(ErrorCode::PARAM_INVALID, '参数不合法');
         }
 
@@ -114,13 +120,13 @@ class User extends Base
         $user = $this->_userInfoExist($userId);
 
         //重复操作
-        if ($user->status == $status) {
+        if ($user->status == $data['status']) {
             errorJson(ErrorCode::PARAM_INVALID, '重复操作');
         }
 
         //更新数据
         $flag = UserModel::where('user_id', $userId)
-            ->update(['status' => $status]);
+            ->update($data);
         if ($flag) {
             successJson('用户状态修改成功');
         } else {
@@ -148,6 +154,7 @@ class User extends Base
             errorJson(ErrorCode::PARAM_INVALID, '删除用户失败');
         }
     }
+
 
     /**
      * @desc 验证用户信息是否存在

@@ -10,6 +10,7 @@ namespace app\admin\service;
 
 
 use app\admin\model\Group as GroupModel;
+use app\common\service\BaseService;
 
 class GroupService extends BaseService
 {

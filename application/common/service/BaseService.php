@@ -6,7 +6,7 @@
  * Time: 09:44
  */
 
-namespace app\admin\service;
+namespace app\common\service;
 
 
 use app\constants\ErrorCode;

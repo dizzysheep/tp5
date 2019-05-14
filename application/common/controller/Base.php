@@ -63,7 +63,7 @@ class Base extends Controller
     private function _checkLogin()
     {
         if (!Session::get('user_id')) {
-            $this->errorJson(ErrorCode::RET_LOGIN_TIME_OUT, '登录超时');
+            errorJson(ErrorCode::RET_LOGIN_TIME_OUT, '登录超时');
         }
         $this->userId = Session::get('user_id');
 

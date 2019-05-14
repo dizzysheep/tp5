@@ -6,13 +6,22 @@
  * Time: 10:42
  */
 
-namespace app\admin\validate;
+namespace app\common\validate;
 
 
 use think\Validate;
 
 class BaseValid extends Validate
 {
+
+    /**
+     * @desc 自定义处理函数
+     */
+    public function init()
+    {
+
+    }
+
     /**
      * @desc 获取rule规则
      * @return array
@@ -31,4 +40,22 @@ class BaseValid extends Validate
     {
         return $this->scene[$scene] ? array_flip($this->scene[$scene]) : array();
     }
+
+    /**
+     * @desc 正整数验证规则
+     * @param $value
+     * @param $rule
+     * @param $data
+     * @param $field
+     * @return bool|string
+     */
+    public function positiveInt($value, $rule, $data, $field)
+    {
+        if (preg_match("/^[1-9][0-9]*$/", $value)) {
+            return true;
+        }
+
+        return $field.' 不是正整数';
+    }
+
 }
