@@ -57,5 +57,22 @@ trait UserTrait
         return $userInfo->name;
     }
 
+    /**
+     * @desc 设置创建者
+     * @return int
+     */
+    public function setCreateUserIdAttr()
+    {
+        return Session::get('user_id') ?: 0;
+    }
+
+    /**
+     * @desc 设置创建者
+     * @return int
+     */
+    public function setUpdateUserIdAttr()
+    {
+        return Session::get('user_id') ?: 0;
+    }
 
 }

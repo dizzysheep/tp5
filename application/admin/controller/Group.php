@@ -35,6 +35,10 @@ class Group extends Base
     /**
      * @desc 用户组列表
      * @link /group/groupList
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
      */
     public function groupList()
     {
@@ -44,10 +48,9 @@ class Group extends Base
         $pageNo = $this->request->param('page_no', Common::FIRST_PAGE);
         $pageSize = $this->request->param('page_size', Common::PAGE_SIZE);
 
-        $groupService = Func::loadService('group');
-        $data['total'] = $groupService->getCount($params);
+        $data['total'] = $this->model->getCount($params);
         if ($data['total'] > 0) {
-            $data['item'] = $groupService->getList($pageNo, $pageSize, $params);
+            $data['item'] = $this->model->getList($pageNo, $pageSize, $params);
         }
 
         successJson('查询成功', $data);
@@ -79,7 +82,6 @@ class Group extends Base
     {
         //参数校验
         $data = Func::loadService('group')->checkParams();
-        $data['update_user'] = $this->userId;
 
         //判断用户组是否存在
         $groupId = $this->request->param('group_id', 0);

@@ -6,10 +6,6 @@ use app\admin\model\User;
 use app\common\service\BaseService;
 use think\Session;
 
-/**
- * Class UserService
- * @package app\admin\service
- */
 class UserService extends BaseService
 {
 

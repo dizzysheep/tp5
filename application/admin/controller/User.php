@@ -6,7 +6,6 @@ use app\common\controller\Base;
 use app\constants\Common;
 use app\constants\ErrorCode;
 use app\Func;
-use think\Loader;
 use think\Request;
 use \app\admin\model\User as UserModel;
 
@@ -64,7 +63,6 @@ class User extends Base
     {
         //参数校验
         $data = Func::loadService('user')->checkParams();
-        $data['create_user_id'] = $this->userId;
 
         //执行写入
         $flag = $this->model->data($data, true)->save();
@@ -85,7 +83,6 @@ class User extends Base
     {
         //参数校验
         $data = Func::loadService('user')->checkParams('user', 'edit');
-        $data['update_user_id'] = $this->userId;
 
         //用户信息处理
         $userId = $request->param('user_id');
@@ -109,7 +106,6 @@ class User extends Base
     {
         //参数校验
         $data['status'] = $this->request->param('status');
-        $data['update_user_id'] = $this->userId;
 
         $userId = $this->request->param('user_id');
         if (!in_array($data['status'], [Common::SWITCH_OPEN, Common::SWITCH_CLONE])) {
@@ -125,8 +121,7 @@ class User extends Base
         }
 
         //更新数据
-        $flag = UserModel::where('user_id', $userId)
-            ->update($data);
+        $flag = $this->model->save($data, ['user_id' => $userId]);
         if ($flag) {
             successJson('用户状态修改成功');
         } else {

@@ -39,10 +39,17 @@ class User extends Model
     protected $autoWriteTimestamp = true;
 
     /**
+     * @desc 添加自动写入
+     * @var array
+     */
+    protected $insert = ['create_user_id'];
+
+    /**
      * @desc 修改
      * @var array
      */
-    protected $update = ['update_time'];
+    protected $update = ['update_user_id'];
+
 
     /**
      * @desc 密码加密
@@ -118,9 +125,9 @@ class User extends Model
         //用户名/手机号/真实姓名查询
         if (!empty($params['search_key'])) {
             $where = " and ( 
-            phone like '%".$params['search_key']."%' 
-            or username like '%".$params['search_key']."%'
-            or name like '%".$params['search_key']."%'
+            phone like '%" . $params['search_key'] . "%' 
+            or username like '%" . $params['search_key'] . "%'
+            or name like '%" . $params['search_key'] . "%'
             )";
         }
 
