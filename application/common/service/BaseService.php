@@ -61,6 +61,7 @@ class BaseService
         //获取验证参数
         $data = Request::instance()->param();
 
+
         //数据校验
         $validate = Loader::validate($validName . System::VALID_SUFFIX);
         $validate->scene($scene);

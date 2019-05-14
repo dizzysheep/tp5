@@ -65,7 +65,7 @@ class User extends Base
         $data = Func::loadService('user')->checkParams();
 
         //执行写入
-        $flag = $this->model->data($data, true)->save();
+        $flag = $this->model->save($data);
         if ($flag) {
             successJson('添加用户成功');
         } else {

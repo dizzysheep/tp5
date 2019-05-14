@@ -45,11 +45,10 @@ class User extends Model
     protected $insert = ['create_user_id'];
 
     /**
-     * @desc 修改
+     * @desc 修改自动写入
      * @var array
      */
     protected $update = ['update_user_id'];
-
 
     /**
      * @desc 密码加密

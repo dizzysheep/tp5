@@ -14,6 +14,8 @@ use think\Session;
 
 trait UserTrait
 {
+
+
     /**
      * @desc 创建人展示
      * @param $value
