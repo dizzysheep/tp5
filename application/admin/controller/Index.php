@@ -15,6 +15,6 @@ class Index extends Base
 {
     public function index()
     {
-        $this->successJson('success', ['hello world']);
+        successJson('success', ['hello world']);
     }
 }

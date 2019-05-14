@@ -4,6 +4,7 @@ namespace app\common\controller;
 
 use app\admin\model\User;
 use app\constants\ErrorCode;
+use app\Func;
 use think\Controller;
 use think\Session;
 
@@ -50,6 +51,8 @@ class Base extends Controller
 
         //权限验证
         $this->__hasAuth();
+
+        return true;
     }
 
     /**
@@ -76,36 +79,5 @@ class Base extends Controller
 
     }
 
-    /**
-     * @desc 成功返回
-     * @param $msg
-     * @param $data
-     */
-    public function successJson($msg = 'success', $data = [])
-    {
-        $this->returnJson(ErrorCode::RET_SUCCESS, $msg, $data);
-    }
-
-    /**
-     * @desc 失败返回
-     * @param int $code
-     * @param string $msg
-     */
-    public function errorJson($code = ErrorCode::RET_ERROR, $msg = 'system error')
-    {
-        $this->returnJson($code, $msg);
-    }
-
-    /**
-     * @desc 自定义返回
-     * @param $code
-     * @param string $msg
-     * @param array $data
-     */
-    public function returnJson($code, $msg = '', $data = [])
-    {
-        json(['code' => $code, 'msg' => $msg, 'data' => $data])->send();
-        die;
-    }
 
 }

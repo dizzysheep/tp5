@@ -6,8 +6,10 @@ use app\common\controller\Base;
 use app\constants\Common;
 use app\constants\ErrorCode;
 use app\Func;
+use think\Loader;
 use think\Request;
 use \app\admin\model\User as UserModel;
+use think\Validate;
 
 class User extends Base
 {
@@ -25,42 +27,34 @@ class User extends Base
         $pageNo = $request->param('page_no');
         $pageSize = $request->param('page_size');
 
+        //查询数据
         $userService = Func::loadService('user');
         $data['total'] = $userService->getCount($params);
         if ($data['total'] > 0) {
             $data['item'] = $userService->getList($pageNo, $pageSize, $params);
         }
 
-        return $this->successJson('查询成功', $data);
+        successJson('查询成功', $data);
     }
 
     /**
      * @desc 用户添加
      * @link /user/userAdd
-     * @param Request $request
      */
-    public function userAdd(Request $request)
+    public function userAdd()
     {
-        $data['name'] = $request->param('name');
-        $data['username'] = $request->param('username');
-        $data['password'] = $request->param('password');
-        $data['phone'] = $request->param('phone');
-        $data['sex'] = $request->param('sex');
-
         //参数校验
-        $result = $this->validate($data, '\app\admin\validate\UserValid');
-        if ($result !== true) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, $result);
-        }
+        $data = Func::loadService('User')->checkParams();
+        $data['create_user'] = $this->userId;
 
         //执行写入
         $userModel = new UserModel();
         $userModel->data($data, true);
         $flag = $userModel->save();
         if ($flag) {
-            $this->successJson('添加用户成功');
+            successJson('添加用户成功');
         } else {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '添加用户失败');
+            errorJson(ErrorCode::PARAM_INVALID, '添加用户失败');
         }
     }
 
@@ -72,26 +66,21 @@ class User extends Base
      */
     public function userEdit(Request $request)
     {
-        $data['name'] = $request->param('name');
-        $data['sex'] = $request->param('sex');
-        $userId = $request->param('user_id');
-
         //参数校验
-        $result = $this->validate($data, '\app\admin\validate\UserValid.edit');
-        if ($result !== true) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, $result);
-        }
+        $data = Func::loadService('User')->checkParams('user', 'edit');
+        $data['update_user'] = $this->userId;
 
         //用户信息处理
+        $userId = $request->param('user_id');
         $user = $this->_userInfoExist($userId);
 
         //执行写入
         $userModel = new UserModel();
         $flag = $userModel->save($data, ['user_id' => $user->user_id]);
         if ($flag) {
-            $this->successJson('修改用户信息成功');
+            successJson('修改用户信息成功');
         } else {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '修改用户信息失败');
+            errorJson(ErrorCode::PARAM_INVALID, '修改用户信息失败');
         }
     }
 
@@ -106,7 +95,7 @@ class User extends Base
         $status = $this->request->param('status');
         $userId = $this->request->param('user_id');
         if (!in_array($status, [Common::SWITCH_OPEN, Common::SWITCH_CLONE])) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '参数不合法');
+            errorJson(ErrorCode::PARAM_INVALID, '参数不合法');
         }
 
         //用户信息处理
@@ -114,16 +103,16 @@ class User extends Base
 
         //重复操作
         if ($user->status == $status) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '重复操作');
+            errorJson(ErrorCode::PARAM_INVALID, '重复操作');
         }
 
         //更新数据
         $flag = UserModel::where('user_id', $userId)
             ->update(['status' => $status]);
         if ($flag) {
-            $this->successJson('用户状态修改成功');
+            successJson('用户状态修改成功');
         } else {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '用户状态修改失败');
+            errorJson(ErrorCode::PARAM_INVALID, '用户状态修改失败');
         }
     }
 
@@ -142,9 +131,9 @@ class User extends Base
         //删除数据
         $flag = $user->delete();
         if ($flag) {
-            $this->successJson('删除用户成功');
+            successJson('删除用户成功');
         } else {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '删除用户失败');
+            errorJson(ErrorCode::PARAM_INVALID, '删除用户失败');
         }
     }
 
@@ -159,13 +148,13 @@ class User extends Base
     private function _userInfoExist($userId)
     {
         if (empty($userId)) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, 'user_id参数不合法');
+            errorJson(ErrorCode::PARAM_INVALID, 'user_id参数不合法');
         }
 
         //用户信息查询
         $user = UserModel::find($userId);
         if (empty($user)) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '用户信息不存在');
+            errorJson(ErrorCode::PARAM_INVALID, '用户信息不存在');
         }
 
         return $user;

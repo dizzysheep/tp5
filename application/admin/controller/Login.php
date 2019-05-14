@@ -28,24 +28,24 @@ class Login extends Base
         //数据验证
         $result = $this->validate($data, 'app\admin\validate\LoginValid');
         if ($result !== true) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, $result);
+            errorJson(ErrorCode::PARAM_INVALID, $result);
         }
 
         //查询用户信息
         $userInfo = (new User())->where('username', $data['username'])->find();
         if (empty($userInfo)) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '用户信息不存在');
+            errorJson(ErrorCode::PARAM_INVALID, '用户信息不存在');
         }
 
         //判断密码是否正确
         if (!password_verify($data['password'], $userInfo->password)) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '账号或密码错误');
+            errorJson(ErrorCode::PARAM_INVALID, '账号或密码错误');
         }
 
         //登录逻辑处理
         Func::loadService('user')->login($userInfo);
 
-        $this->successJson('登录成功');
+        successJson('登录成功');
     }
 
     /**
@@ -55,6 +55,6 @@ class Login extends Base
     {
         Session::delete('user_id');
         Session::delete('user_id');
-        $this->successJson('退出成功');
+        successJson('退出成功');
     }
 }

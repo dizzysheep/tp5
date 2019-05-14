@@ -22,7 +22,6 @@ class Group extends Base
     {
         $params = [];
 
-        Func::loadService('group')->getCount();
     }
 
     /**
@@ -34,7 +33,7 @@ class Group extends Base
         //数据校验
         $groupName = $this->request->param('group_name');
         if (empty($groupName)) {
-            $this->errorJson(ErrorCode::PARAM_INVALID, '请输入用户组名');
+            errorJson(ErrorCode::PARAM_INVALID, '请输入用户组名');
         }
 
         //添加数据
@@ -42,9 +41,9 @@ class Group extends Base
         $groupModel->group_name = $groupName;
         $flag = $groupModel->save();
         if ($flag) {
-            $this->errorJson(ErrorCode::DB_EXEC_FAIL, '添加用户组成功');
+            errorJson(ErrorCode::DB_EXEC_FAIL, '添加用户组成功');
         } else {
-            $this->successJson(ErrorCode::DB_EXEC_FAIL, '添加用户组失败');
+            successJson(ErrorCode::DB_EXEC_FAIL, '添加用户组失败');
         }
     }
 }

@@ -46,4 +46,64 @@ class Func
         return Loader::model($name, $layer, $appendSuffix);
     }
 
+    /**
+     * 字符串变成小驼峰
+     * @param $str
+     * @return string
+     */
+    static public function toLittleHump($str)
+    {
+        $arr = preg_split('/_|-/', $str);
+        if (count($arr) == 1) {
+            return strtolower($str);
+        }
+
+        foreach ($arr as $key => &$value) {
+            if ($key == 0) {
+                $value = strtolower($value);
+            } else {
+                $value = ucfirst($value);
+            }
+        }
+
+        return implode('', $arr);
+    }
+
+    /**
+     * 字符串变成大驼峰
+     * @param $str
+     * @return string
+     */
+    static public function toBigHump($str)
+    {
+        $arr = preg_split('/_|-/', $str);
+        foreach ($arr as &$value) {
+            $value = ucfirst($value);
+        }
+        return implode('', $arr);
+    }
+
+
+    /**
+     * @desc 获取类名 例如 base_service \app\admin\service\base
+     * @param $obj
+     * @param $suffix
+     * @return string|string[]|null
+     */
+    public static function getClassName($obj, $suffix = '')
+    {
+        $className = get_class($obj);
+        $classNameArr = explode('\\', $className);
+        if ($classNameArr) {
+            $className = end($classNameArr);
+        }
+
+        $serviceName = self::toCStyle($className);
+        $suffix && $serviceName = preg_replace("/_$suffix/", '', $serviceName);
+        $serviceName = trim(self::toBigHump($serviceName));
+
+        return $serviceName;
+    }
+
+
 }

@@ -9,7 +9,7 @@
 namespace app\admin\service;
 
 
-class GroupService
+class GroupService extends BaseService
 {
 
 }

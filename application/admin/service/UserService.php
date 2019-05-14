@@ -5,7 +5,11 @@ namespace app\admin\service;
 use app\admin\model\User;
 use think\Session;
 
-class UserService
+/**
+ * Class UserService
+ * @package app\admin\service
+ */
+class UserService extends BaseService
 {
     /**
      * @desc 获取分页数据
