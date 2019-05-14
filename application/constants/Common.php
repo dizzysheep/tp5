@@ -4,6 +4,9 @@ namespace app\constants;
 
 class Common
 {
+    //默认页数
+    const FIRST_PAGE = 1;
+
     //分页默认大小
     const PAGE_SIZE = 20;
 

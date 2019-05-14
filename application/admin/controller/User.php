@@ -6,13 +6,28 @@ use app\common\controller\Base;
 use app\constants\Common;
 use app\constants\ErrorCode;
 use app\Func;
-use think\Loader;
 use think\Request;
 use \app\admin\model\User as UserModel;
-use think\Validate;
 
 class User extends Base
 {
+    /**
+     * @desc 用户组model
+     * @var \app\admin\model\User
+     */
+    protected $model;
+
+    /**
+     * @desc 初始化函数
+     * @return bool|void
+     */
+    public function _initialize()
+    {
+        parent::_initialize();
+        $this->model = new UserModel();
+    }
+
+
     /**
      * @desc 查询类标数据
      * @link /user/userList
@@ -24,8 +39,8 @@ class User extends Base
         $params['search_key'] = $request->param('search_key');
 
         //分页信息
-        $pageNo = $request->param('page_no');
-        $pageSize = $request->param('page_size');
+        $pageNo = $request->param('page_no', Common::FIRST_PAGE);
+        $pageSize = $request->param('page_size', Common::PAGE_SIZE);
 
         //查询数据
         $userService = Func::loadService('user');
@@ -44,13 +59,11 @@ class User extends Base
     public function userAdd()
     {
         //参数校验
-        $data = Func::loadService('User')->checkParams();
+        $data = Func::loadService('user')->checkParams();
         $data['create_user'] = $this->userId;
 
         //执行写入
-        $userModel = new UserModel();
-        $userModel->data($data, true);
-        $flag = $userModel->save();
+        $flag = $this->model->data($data, true)->save();
         if ($flag) {
             successJson('添加用户成功');
         } else {
@@ -67,7 +80,7 @@ class User extends Base
     public function userEdit(Request $request)
     {
         //参数校验
-        $data = Func::loadService('User')->checkParams('user', 'edit');
+        $data = Func::loadService('user')->checkParams('user', 'edit');
         $data['update_user'] = $this->userId;
 
         //用户信息处理
@@ -75,8 +88,7 @@ class User extends Base
         $user = $this->_userInfoExist($userId);
 
         //执行写入
-        $userModel = new UserModel();
-        $flag = $userModel->save($data, ['user_id' => $user->user_id]);
+        $flag = $this->model->save($data, ['user_id' => $user->user_id]);
         if ($flag) {
             successJson('修改用户信息成功');
         } else {

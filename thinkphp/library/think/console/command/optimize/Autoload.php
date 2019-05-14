@@ -221,7 +221,7 @@ EOF;
 
     protected function findClasses($path)
     {
-        $extraTypes = '|trait';
+        $extraTypes = '|traits';
 
         $contents = @php_strip_whitespace($path);
         if (!$contents) {

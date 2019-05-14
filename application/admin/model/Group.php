@@ -9,10 +9,14 @@
 namespace app\admin\model;
 
 
+use app\admin\traits\SystemTimeTrait;
+use app\admin\traits\UserTrait;
 use think\Model;
 
 class Group extends Model
 {
+    use UserTrait;
+    use SystemTimeTrait;
 
     /**
      * @desc 主键
