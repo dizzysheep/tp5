@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: yangxiang
+ * UserValid: yangxiang
  * Date: 2019-05-14
  * Time: 10:42
  */
@@ -55,7 +55,25 @@ class BaseValid extends Validate
             return true;
         }
 
-        return $field.' 不是正整数';
+        return $field . ' 不是正整数';
     }
+
+    /**
+     * @desc 正整数验证规则
+     * @param $value
+     * @param $rule
+     * @param $data
+     * @param $field
+     * @return bool|string
+     */
+    public function maxLength($value, $rule, $data, $field)
+    {
+        if (strlen($value) <= $rule) {
+            return true;
+        }
+
+        return $field . ' 最大长度不能超过' . $rule;
+    }
+
 
 }

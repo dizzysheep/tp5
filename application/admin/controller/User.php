@@ -30,6 +30,7 @@ class User extends Base
 
     /**
      * @desc 查询类标数据
+     * @link /user/userList
      * @param Request $request
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
@@ -69,7 +70,7 @@ class User extends Base
         if ($flag) {
             successJson('添加用户成功');
         } else {
-            errorJson(ErrorCode::PARAM_INVALID, '添加用户失败');
+            errorJson(ErrorCode::DB_EXEC_FAIL, '添加用户失败');
         }
     }
 
@@ -93,7 +94,7 @@ class User extends Base
         if ($flag) {
             successJson('修改用户信息成功');
         } else {
-            errorJson(ErrorCode::PARAM_INVALID, '修改用户信息失败');
+            errorJson(ErrorCode::DB_EXEC_FAIL, '修改用户信息失败');
         }
     }
 
@@ -125,7 +126,7 @@ class User extends Base
         if ($flag) {
             successJson('用户状态修改成功');
         } else {
-            errorJson(ErrorCode::PARAM_INVALID, '用户状态修改失败');
+            errorJson(ErrorCode::DB_EXEC_FAIL, '用户状态修改失败');
         }
     }
 
@@ -146,7 +147,7 @@ class User extends Base
         if ($flag) {
             successJson('删除用户成功');
         } else {
-            errorJson(ErrorCode::PARAM_INVALID, '删除用户失败');
+            errorJson(ErrorCode::DB_EXEC_FAIL, '删除用户失败');
         }
     }
 

@@ -4,15 +4,16 @@ namespace app\admin\validate;
 
 
 use app\common\validate\BaseValid;
+use app\constants\Common;
 
 class UserValid extends BaseValid
 {
     protected $rule = [
-        'username' => 'require|alphaDash|unique:user|max:32',
-        'name' => 'require|max:32',
-        'password' => 'require|max:12',
+        'username' => 'require|alphaDash|unique:user|maxLength:32',
+        'name' => 'require|maxLength:32',
+        'password' => 'require|alphaDash',
         'phone' => 'require|length:11|number',
-        'sex' => 'require|in:1,2',
+        'sex' => 'require|integer|in:' . Common::SWITCH_OPEN . ',' . Common::SWITCH_CLONE,
         'group_id' => 'require|positiveInt',
     ];
 

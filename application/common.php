@@ -11,7 +11,7 @@
 
 // 应用公共文件
 /**
- * @desc 成功返回
+ * @desc 成功response返回
  * @param $msg
  * @param $data
  */
@@ -24,7 +24,7 @@ if (!function_exists('successJson')) {
 
 
 /**
- * @desc 失败返回
+ * @desc 失败response返回
  * @param int $code
  * @param string $msg
  */
@@ -36,7 +36,7 @@ if (!function_exists('errorJson')) {
 }
 
 /**
- * @desc 自定义返回
+ * @desc 自定义response返回
  * @param $code
  * @param string $msg
  * @param array $data
@@ -46,5 +46,26 @@ if (!function_exists('returnJson')) {
     {
         json(['code' => $code, 'msg' => $msg, 'data' => $data])->send();
         die;
+    }
+}
+
+if (!function_exists('successReturn')) {
+    function successReturn($msg = 'success', $data = [])
+    {
+        return formatterReturn(\app\constants\ErrorCode::RET_SUCCESS, $msg, $data);
+    }
+}
+
+if (!function_exists('errorReturn')) {
+    function errorReturn($code = \app\constants\ErrorCode::RET_ERROR, $msg = 'success', $data = [])
+    {
+        return formatterReturn($code, $msg, $data);
+    }
+}
+
+if (!function_exists('formatterReturn')) {
+    function formatterReturn($code, $msg = '', $data = [])
+    {
+        return ['code' => $code, 'msg' => $msg, 'data' => $data];
     }
 }
