@@ -63,14 +63,14 @@ class Group extends Base
     public function groupAdd()
     {
         //参数校验
-        $data = Func::loadService('group')->checkParams();
+        $data = $this->request->param();
 
         //添加数据
-        $flag = $this->model->save($data);
+        $flag = $this->model->insertOne($data);
         if ($flag) {
-            errorJson(ErrorCode::DB_EXEC_FAIL, '添加用户组成功');
+            successJson(ErrorCode::DB_EXEC_FAIL, '添加用户组成功');
         } else {
-            successJson(ErrorCode::DB_EXEC_FAIL, '添加用户组失败');
+            errorJson(ErrorCode::DB_EXEC_FAIL, '添加用户组失败,' . $this->model->getError());
         }
     }
 
@@ -81,19 +81,21 @@ class Group extends Base
     public function groupEdit()
     {
         //参数校验
-        $data = Func::loadService('group')->checkParams();
+        $data = $this->request->param();
 
         //判断用户组是否存在
         $groupId = $this->request->param('group_id', 0);
         $info = $this->model->find($groupId);
-        empty($info) && errorJson(ErrorCode::PARAM_INVALID, '用户组不存在');
+        if (empty($info)) {
+            errorJson(ErrorCode::PARAM_INVALID, '用户组不存在');
+        }
 
         //添加数据
-        $flag = $this->model->save($data, ['group_id' => $info->group_id]);
+        $flag = $this->model->updateOne($groupId, $data);
         if ($flag) {
-            errorJson(ErrorCode::DB_EXEC_FAIL, '修改用户组成功');
+            successJson(ErrorCode::DB_EXEC_FAIL, '修改用户组成功');
         } else {
-            successJson(ErrorCode::DB_EXEC_FAIL, '修改用户组失败');
+            errorJson(ErrorCode::DB_EXEC_FAIL, '修改用户组失败');
         }
     }
 }

@@ -3,10 +3,9 @@
 namespace app\admin\service;
 
 use app\admin\model\User;
-use app\common\service\BaseService;
 use think\Session;
 
-class UserService extends BaseService
+class UserService
 {
 
     /**

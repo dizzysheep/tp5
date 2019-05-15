@@ -39,12 +39,11 @@ class GroupAuth extends Base
      */
     public function add()
     {
-        //参数校验
-        $groupAuthService = Func::loadService('group_auth');
-        $data = $groupAuthService->checkParams();
+        //获取参数
+        $data = $this->request->param();
 
         //执行写入
-        $return = $groupAuthService->save($data);
+        $return = service('group_auth')->save($data);
         if ($return['code'] == ErrorCode::RET_SUCCESS) {
             successJson('添加权限成功');
         } else {
@@ -58,12 +57,11 @@ class GroupAuth extends Base
      */
     public function edit()
     {
-        //参数校验
-        $groupAuthService = Func::loadService('group_auth');
-        $data = $groupAuthService->checkParams();
+        //获取参数
+        $data = $this->request->param();
 
         //执行写入
-        $return = $groupAuthService->update($data);
+        $return = service('group_auth')->update($data);
         if ($return['code'] == ErrorCode::RET_SUCCESS) {
             successJson('修改权限成功');
         } else {

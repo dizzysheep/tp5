@@ -11,7 +11,7 @@ namespace app\admin\validate;
 
 use app\common\validate\BaseValid;
 
-class GroupValid extends BaseValid
+class Group extends BaseValid
 {
     protected $rule = [
         'group_name' => 'require',

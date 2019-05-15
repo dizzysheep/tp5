@@ -4,11 +4,11 @@ namespace app\admin\model;
 
 use app\admin\traits\SystemTimeTrait;
 use app\admin\traits\UserTrait;
+use app\common\model\Base;
 use app\constants\Common;
-use think\Model;
 use traits\model\SoftDelete;
 
-class User extends Model
+class User extends Base
 {
     use SoftDelete;
     use UserTrait;
@@ -80,33 +80,6 @@ class User extends Model
         return Common::SEX_SHOW[$value] ?? '未知';
     }
 
-    /**
-     * @desc 获取分页数据
-     * @param $pageNo
-     * @param $pageSize
-     * @param array $params
-     * @return false|\PDOStatement|string|\think\Collection
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function getList($pageNo, $pageSize, $params = [])
-    {
-        $where = $this->buildWhere($params);
-        return $this->where($where)->page($pageNo, $pageSize)->select();
-    }
-
-    /**
-     * @desc 查询总数
-     * @param array $params
-     * @return int|string
-     * @throws \think\Exception
-     */
-    public function getCount($params = [])
-    {
-        $where = $this->buildWhere($params);
-        return $this->where($where)->count();
-    }
 
     /**
      * @desc 处理搜索条件
@@ -118,12 +91,12 @@ class User extends Model
         $where = " 1 = 1 ";
         //用户组id查询
         if (!empty($params['group_id'])) {
-            $where = " and group_id = " . $params['group_id'];
+            $where .= " and group_id = " . $params['group_id'];
         }
 
         //用户名/手机号/真实姓名查询
         if (!empty($params['search_key'])) {
-            $where = " and ( 
+            $where .= " and ( 
             phone like '%" . $params['search_key'] . "%' 
             or username like '%" . $params['search_key'] . "%'
             or name like '%" . $params['search_key'] . "%'
@@ -132,6 +105,7 @@ class User extends Model
 
         return $where;
     }
+
 
 
 }

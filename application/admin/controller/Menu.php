@@ -37,12 +37,11 @@ class Menu extends Base
      */
     public function menuAdd()
     {
-        //参数校验
-        $menuService = Func::loadService('menu');
-        $data = $menuService->checkParams();
+        //获取参数
+        $data = $this->request->param();
 
         //执行写入
-        $return = $menuService->save($data);
+        $return = service('menu')->save($data);
         if ($return['code'] == ErrorCode::RET_SUCCESS) {
             successJson('添加菜单成功');
         } else {
@@ -56,20 +55,21 @@ class Menu extends Base
      */
     public function menuEdit()
     {
-        $data = Func::loadService('menu')->checkParams('menu', 'edit');
-        $data['menu_id'] = $this->request->param('menu_id', 0);
+        //获取参数
+        $data = $this->request->param();
+        $menuId = $this->request->param('menu_id', 0);
 
-        $info = $this->model->find($data['menu_id']);
+        $info = $this->model->find($menuId);
         if (empty($info)) {
             errorJson(ErrorCode::PARAM_INVALID, '菜单详情不存在');
         }
 
         //执行写入
-        $flag = $this->model->update($data);
+        $flag = $this->model->updateOne($menuId, $data);
         if ($flag) {
             successJson('修改菜单成功');
         } else {
-            errorJson(ErrorCode::DB_EXEC_FAIL, '修改菜单失败');
+            errorJson(ErrorCode::DB_EXEC_FAIL, '修改菜单失败,' . $this->model->getError());
         }
     }
 }

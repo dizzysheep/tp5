@@ -9,11 +9,11 @@
 namespace app\admin\service;
 
 
-use app\common\service\BaseService;
+use app\admin\model\Menu;
 use app\constants\ErrorCode;
 use Exception;
 
-class MenuService extends BaseService
+class MenuService
 {
     /**
      * @desc 添加菜单
@@ -24,14 +24,14 @@ class MenuService extends BaseService
     public function save($data)
     {
         // 启动事务
-        $menuModel = model('menu');
+        $menuModel = new Menu();
         $menuModel->startTrans();
 
         try {
             //写入
-            $flag = $menuModel->save($data);
+            $flag = $menuModel->insertOne($data);
             if (!$flag) {
-                throw new Exception("写入menu数据失败");
+                throw new Exception("写入menu数据失败," . $menuModel->getError());
             }
 
             //更新
@@ -40,7 +40,7 @@ class MenuService extends BaseService
                 'sort' => $menuModel->menu_id,
             ]);
             if (!$flag2) {
-                throw new Exception("更新menu表的sort字段失败");
+                throw new Exception("更新menu表的sort字段失败," . $menuModel->getError());
             }
 
             $menuModel->commit();

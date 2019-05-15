@@ -12,7 +12,7 @@ namespace app\admin\validate;
 use app\common\validate\BaseValid;
 use app\constants\Common;
 
-class MenuValid extends BaseValid
+class Menu extends BaseValid
 {
     protected $rule = [
         'title' => 'require|maxLength:32',
@@ -23,7 +23,5 @@ class MenuValid extends BaseValid
         'sort' => 'integer',
     ];
 
-    protected $scene = [
-        'edit' => ['title', 'url', 'style_name', 'is_show', 'pid', 'sort'],
-    ];
+
 }

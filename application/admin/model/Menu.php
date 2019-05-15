@@ -11,9 +11,9 @@ namespace app\admin\model;
 
 use app\admin\traits\SystemTimeTrait;
 use app\admin\traits\UserTrait;
-use think\Model;
+use app\common\model\Base;
 
-class Menu extends Model
+class Menu extends Base
 {
     use UserTrait;
     use SystemTimeTrait;

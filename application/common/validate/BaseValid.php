@@ -59,7 +59,7 @@ class BaseValid extends Validate
     }
 
     /**
-     * @desc 正整数验证规则
+     * @desc 最大长度规则
      * @param $value
      * @param $rule
      * @param $data

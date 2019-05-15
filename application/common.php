@@ -49,6 +49,9 @@ if (!function_exists('returnJson')) {
     }
 }
 
+/**
+ * @desc success格式化返回数据
+ */
 if (!function_exists('successReturn')) {
     function successReturn($msg = 'success', $data = [])
     {
@@ -56,6 +59,9 @@ if (!function_exists('successReturn')) {
     }
 }
 
+/**
+ * @desc error格式化返回数据
+ */
 if (!function_exists('errorReturn')) {
     function errorReturn($code = \app\constants\ErrorCode::RET_ERROR, $msg = 'success', $data = [])
     {
@@ -63,9 +69,26 @@ if (!function_exists('errorReturn')) {
     }
 }
 
+/**
+ * @desc formatterReturn格式化返回数据
+ */
 if (!function_exists('formatterReturn')) {
     function formatterReturn($code, $msg = '', $data = [])
     {
         return ['code' => $code, 'msg' => $msg, 'data' => $data];
+    }
+}
+
+if (!function_exists('service')) {
+    /**
+     * 实例化Model
+     * @param string $name Model名称
+     * @param string$layer 业务层名称
+     * @param string $appendSuffix 是否添加类名后缀
+     * @return object
+     */
+    function service($name = '', $layer = 'service', $appendSuffix = 'service')
+    {
+        return \think\Loader::model($name, $layer, $appendSuffix);
     }
 }

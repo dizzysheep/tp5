@@ -9,11 +9,10 @@
 namespace app\admin\service;
 
 
-use app\common\service\BaseService;
 use app\constants\ErrorCode;
 use Exception;
 
-class GroupAuthService extends BaseService
+class GroupAuthService
 {
     /**
      * @desc 权限
@@ -24,7 +23,7 @@ class GroupAuthService extends BaseService
     /**
      * @desc 自定义处理函数
      */
-    public function init()
+    public function __construct()
     {
         $this->groupAuthModel = model('group_auth');
     }
@@ -32,11 +31,17 @@ class GroupAuthService extends BaseService
     /**
      * @desc 批量添加权限
      * @param $data
-     * @throws \Exception
+     * @return array
+     * @throws Exception
      */
     public function save($data)
     {
-        $flag = $this->save($data);
+        $return = $this->checkParams($data);
+        if ($return['code'] != ErrorCode::RET_SUCCESS) {
+            return $return;
+        }
+
+        $flag = $this->saveAuth($data);
         if ($flag) {
             successReturn('添加权限权限成功');
         } else {
@@ -47,10 +52,16 @@ class GroupAuthService extends BaseService
     /**
      * @desc 更新权限（删除原来的权限，添加新的）
      * @param $data
-     * @throws Exception
+     * @return array
+     * @throws \think\exception\PDOException
      */
     public function update($data)
     {
+        $return = $this->checkParams($data);
+        if ($return['code'] != ErrorCode::RET_SUCCESS) {
+            return $return;
+        }
+
         $this->groupAuthModel->startTrans();
         try {
             $flag = $this->groupAuthModel->where('group_id', $data['group_id'])->delete();
@@ -90,5 +101,21 @@ class GroupAuthService extends BaseService
 
         $flag = $this->groupAuthModel->saveAll($batchData);
         return $flag;
+    }
+
+    /**
+     * @desc 判断参数是否为空
+     * @param $data
+     * @return array
+     */
+    protected function checkParams($data)
+    {
+        if (empty($data['group_id'])) {
+            return errorReturn(ErrorCode::RET_ERROR, 'group_id参数不能为空');
+        }
+
+        if (empty($data['menu_id'])) {
+            return errorReturn(ErrorCode::RET_ERROR, 'menu_id参数不能为空');
+        }
     }
 }

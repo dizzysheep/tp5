@@ -5,9 +5,7 @@ namespace app\admin\controller;
 use app\common\controller\Base;
 use app\constants\Common;
 use app\constants\ErrorCode;
-use app\Func;
 use think\Request;
-use \app\admin\model\User as UserModel;
 
 class User extends Base
 {
@@ -31,21 +29,19 @@ class User extends Base
     /**
      * @desc 查询类标数据
      * @link /user/userList
-     * @param Request $request
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function userList(Request $request)
+    public function userList()
     {
         //用户搜索条件处理
-        $params['search_key'] = $request->param('search_key');
-        $params['group_id'] = $request->param('group_id');
+        $params = $this->request->param();
 
         //分页信息
-        $pageNo = $request->param('page_no', Common::FIRST_PAGE);
-        $pageSize = $request->param('page_size', Common::PAGE_SIZE);
+        $pageNo = $this->request->param('page_no', Common::FIRST_PAGE);
+        $pageSize = $this->request->param('page_size', Common::PAGE_SIZE);
 
         //查询数据
         $data['total'] = $this->model->getCount($params);
@@ -62,15 +58,15 @@ class User extends Base
      */
     public function userAdd()
     {
-        //参数校验
-        $data = Func::loadService('user')->checkParams();
+        //获取参数
+        $data = $this->request->param();
 
         //执行写入
-        $flag = $this->model->save($data);
+        $flag = $this->model->insertOne($data);
         if ($flag) {
             successJson('添加用户成功');
         } else {
-            errorJson(ErrorCode::DB_EXEC_FAIL, '添加用户失败');
+            errorJson(ErrorCode::DB_EXEC_FAIL, '添加用户失败,' . $this->model->getError());
         }
     }
 
@@ -82,19 +78,19 @@ class User extends Base
      */
     public function userEdit(Request $request)
     {
-        //参数校验
-        $data = Func::loadService('user')->checkParams('user', 'edit');
+        //获取参数
+        $data = $this->request->param();
 
         //用户信息处理
         $userId = $request->param('user_id');
-        $user = $this->_userInfoExist($userId);
+        $this->_userInfoExist($userId);
 
         //执行写入
-        $flag = $this->model->save($data, ['user_id' => $user->user_id]);
+        $flag = $this->model->updateOne($userId, $data, 'user.edit');
         if ($flag) {
             successJson('修改用户信息成功');
         } else {
-            errorJson(ErrorCode::DB_EXEC_FAIL, '修改用户信息失败');
+            errorJson(ErrorCode::DB_EXEC_FAIL, '修改用户信息失败,' . $this->model->getError());
         }
     }
 
@@ -107,7 +103,6 @@ class User extends Base
     {
         //参数校验
         $data['status'] = $this->request->param('status');
-
         $userId = $this->request->param('user_id');
         if (!in_array($data['status'], [Common::SWITCH_OPEN, Common::SWITCH_CLONE])) {
             errorJson(ErrorCode::PARAM_INVALID, '参数不合法');
@@ -122,7 +117,7 @@ class User extends Base
         }
 
         //更新数据
-        $flag = $this->model->save($data, ['user_id' => $userId]);
+        $flag = $this->model->updateOne($userId, $data, 'user.switch_status');
         if ($flag) {
             successJson('用户状态修改成功');
         } else {
@@ -167,7 +162,7 @@ class User extends Base
         }
 
         //用户信息查询
-        $user = UserModel::find($userId);
+        $user = $this->model->find($userId);
         if (empty($user)) {
             errorJson(ErrorCode::PARAM_INVALID, '用户信息不存在');
         }

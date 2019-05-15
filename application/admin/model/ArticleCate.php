@@ -1,28 +1,21 @@
 <?php
 /**
  * Created by PhpStorm.
- * UserValid: yangxiang
- * Date: 2019-05-13
- * Time: 18:55
+ * User: yangxiang
+ * Date: 2019-05-15
+ * Time: 14:51
  */
 
 namespace app\admin\model;
 
-
 use app\admin\traits\SystemTimeTrait;
 use app\admin\traits\UserTrait;
-use app\common\model\Base;
+use think\Model;
 
-class Group extends Base
+class ArticleCate extends Model
 {
     use UserTrait;
     use SystemTimeTrait;
-
-    /**
-     * @desc 主键
-     * @var string
-     */
-    protected $pk = 'group_id';
 
     /**
      * @desc 自动写入时间戳
@@ -43,17 +36,5 @@ class Group extends Base
     protected $update = ['update_user_id'];
 
 
-    /**
-     * @desc 处理搜索条件
-     * @param $params array
-     * @return mixed
-     */
-    protected function buildWhere(array $params)
-    {
-        $where = " 1 = 1 ";
-
-
-        return $where;
-    }
 
 }
