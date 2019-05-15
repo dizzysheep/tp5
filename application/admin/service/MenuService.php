@@ -15,6 +15,12 @@ use Exception;
 
 class MenuService extends BaseService
 {
+    /**
+     * @desc 添加菜单
+     * @param $data
+     * @return array
+     * @throws \think\exception\PDOException
+     */
     public function save($data)
     {
         // 启动事务

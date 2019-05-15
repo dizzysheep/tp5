@@ -64,7 +64,7 @@ class BaseService
 
         //数据校验
         $validate = Loader::validate($validName . System::VALID_SUFFIX);
-        $validate->scene($scene);
+        $scene && $validate->scene($scene);
         if (!$validate->check($data)) {
             errorJson(ErrorCode::PARAM_INVALID, $validate->getError());
         }

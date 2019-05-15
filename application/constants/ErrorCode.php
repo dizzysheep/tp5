@@ -11,6 +11,7 @@ class ErrorCode
      */
     const RET_LOGIN_TIME_OUT = 100;
     const PARAM_INVALID = 101;
+    const NO_AUTH = 102;
 
     /**
      * @desc 数据库错误 200-399

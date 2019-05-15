@@ -33,4 +33,8 @@ class Common
 
     //性别展示
     const SEX_SHOW = [self::SEX_MAN => '男', self::SEX_WOMAN => '女'];
+
+    //超级管理员
+    const ADMIN_GROUP_ID = 1;
+
 }

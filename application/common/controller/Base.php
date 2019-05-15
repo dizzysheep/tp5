@@ -3,6 +3,7 @@
 namespace app\common\controller;
 
 use app\admin\model\User;
+use app\constants\Common;
 use app\constants\ErrorCode;
 use app\Func;
 use think\Controller;
@@ -65,6 +66,7 @@ class Base extends Controller
         if (!Session::get('user_id')) {
             errorJson(ErrorCode::RET_LOGIN_TIME_OUT, '登录超时');
         }
+
         $this->userId = Session::get('user_id');
 
         //查询用户信息
@@ -76,7 +78,28 @@ class Base extends Controller
      */
     private function __hasAuth()
     {
+        //如果是超级管理员，不校验权限
+        if ($this->userInfo->group_id = Common::ADMIN_GROUP_ID) {
+            return true;
+        }
 
+        //拼装url
+        $url = $this->request->controller . "/" . $this->request->action;
+        $menu = model('menu')->getByUrl($url);
+
+        //不检验权限
+        if ($menu->check_auth == Common::SWITCH_CLONE) {
+            return true;
+        }
+
+        //判断当前登录者是否有权限
+        $menuIds = Session::get('menu_ids');
+        $menus = explode(",", $menuIds);
+        if (in_array($menu->id, $menus)) {
+            return true;
+        }
+
+        errorJson(ErrorCode::NO_AUTH, '没有权限');
     }
 
 

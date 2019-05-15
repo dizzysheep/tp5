@@ -39,7 +39,7 @@ class Func
      * @param string $name
      * @param string $layer
      * @param bool|mixed $appendSuffix
-     * @return object
+     * @return \app\common\service\BaseService
      */
     public static function loadService($name = '', $layer = 'service', $appendSuffix = 'service')
     {
