@@ -9,8 +9,6 @@
 namespace app;
 
 
-use think\Loader;
-
 class Func
 {
     /**
@@ -33,18 +31,6 @@ class Func
         return strtolower(trim(preg_replace("/([A-Z])/", "_$1", $str), ' _'));
     }
 
-
-    /**
-     * @desc 加载service层
-     * @param string $name
-     * @param string $layer
-     * @param bool|mixed $appendSuffix
-     * @return \app\common\service\BaseService
-     */
-    public static function loadService($name = '', $layer = 'service', $appendSuffix = 'service')
-    {
-        return Loader::model($name, $layer, $appendSuffix);
-    }
 
     /**
      * 字符串变成小驼峰
@@ -81,28 +67,6 @@ class Func
             $value = ucfirst($value);
         }
         return implode('', $arr);
-    }
-
-
-    /**
-     * @desc 获取类名 例如 base_service \app\admin\service\base
-     * @param $obj
-     * @param $suffix
-     * @return string|string[]|null
-     */
-    public static function getClassName($obj, $suffix = '')
-    {
-        $className = get_class($obj);
-        $classNameArr = explode('\\', $className);
-        if ($classNameArr) {
-            $className = end($classNameArr);
-        }
-
-        $serviceName = self::toCStyle($className);
-        $suffix && $serviceName = preg_replace("/_$suffix/", '', $serviceName);
-        $serviceName = trim(self::toBigHump($serviceName));
-
-        return $serviceName;
     }
 
 
