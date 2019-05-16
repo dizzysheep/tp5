@@ -106,6 +106,13 @@ class UserModel extends BaseModel
         return $where;
     }
 
+    /**
+     * @desc 管理权限组的权限列表
+     */
+    public function groupAuth()
+    {
+        return $this->hasMany('groupAuthModel', 'group_id');
+    }
 
 
 }

@@ -11,7 +11,6 @@ namespace app\admin\controller;
 
 use app\common\controller\BaseController;
 use app\constants\ErrorCode;
-use app\Func;
 
 class MenuController extends BaseController
 {

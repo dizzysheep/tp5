@@ -83,7 +83,7 @@ class BaseController extends Controller
         }
 
         //拼装url
-        $url = $this->request->controller . "/" . $this->request->action;
+        $url = "/" . trim($this->request->path(), "/");
         $menu = model('menu')->getByUrl($url);
 
         //不检验权限
@@ -94,7 +94,7 @@ class BaseController extends Controller
         //判断当前登录者是否有权限
         $menuIds = Session::get('menu_ids');
         $menus = explode(",", $menuIds);
-        if (in_array($menu->id, $menus)) {
+        if (in_array($menu->menu_id, $menus)) {
             return true;
         }
 

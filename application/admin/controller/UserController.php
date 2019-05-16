@@ -11,7 +11,7 @@ class UserController extends BaseController
 {
     /**
      * @desc 用户组model
-     * @var \app\admin\model\User
+     * @var \app\admin\model\UserModel
      */
     protected $model;
 

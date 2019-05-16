@@ -4,7 +4,6 @@ namespace app\admin\controller;
 
 use app\common\controller\BaseController;
 use app\constants\ErrorCode;
-use app\Func;
 use think\Request;
 use think\Session;
 
