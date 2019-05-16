@@ -11,8 +11,6 @@ namespace app\admin\controller;
 use app\common\controller\BaseController;
 use app\constants\Common;
 use app\constants\ErrorCode;
-use app\admin\model\Group as GroupModel;
-use app\Func;
 
 class GroupController extends BaseController
 {
@@ -29,7 +27,7 @@ class GroupController extends BaseController
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new GroupModel();
+        $this->model = model('group');
     }
 
     /**

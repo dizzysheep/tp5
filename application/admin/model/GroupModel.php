@@ -11,9 +11,9 @@ namespace app\admin\model;
 
 use app\admin\traits\SystemTimeTrait;
 use app\admin\traits\UserTrait;
-use app\common\model\Base;
+use app\common\model\BaseModel;
 
-class Group extends Base
+class GroupModel extends BaseModel
 {
     use UserTrait;
     use SystemTimeTrait;

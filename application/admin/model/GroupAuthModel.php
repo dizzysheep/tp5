@@ -10,9 +10,9 @@ namespace app\admin\model;
 
 use app\admin\traits\SystemTimeTrait;
 use app\admin\traits\UserTrait;
-use think\Model;
+use app\common\model\BaseModel;
 
-class GroupAuth extends Model
+class GroupAuthModel extends BaseModel
 {
     use UserTrait;
     use SystemTimeTrait;

@@ -1,28 +1,21 @@
 <?php
 /**
  * Created by PhpStorm.
- * UserValid: yangxiang
- * Date: 2019-05-14
- * Time: 19:22
+ * User: yangxiang
+ * Date: 2019-05-15
+ * Time: 14:51
  */
 
 namespace app\admin\model;
 
-
 use app\admin\traits\SystemTimeTrait;
 use app\admin\traits\UserTrait;
-use app\common\model\Base;
+use app\common\model\BaseModel;
 
-class Menu extends Base
+class ArticleCateModel extends BaseModel
 {
     use UserTrait;
     use SystemTimeTrait;
-
-    /**
-     * @desc 主键
-     * @var string
-     */
-    protected $pk = 'menu_id';
 
     /**
      * @desc 自动写入时间戳
@@ -36,11 +29,12 @@ class Menu extends Base
      */
     protected $insert = ['create_user_id'];
 
-
     /**
-     * @desc 修改自动写入
+     * @desc 修改
      * @var array
      */
     protected $update = ['update_user_id'];
+
+
 
 }

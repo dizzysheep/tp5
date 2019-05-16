@@ -4,11 +4,11 @@ namespace app\admin\model;
 
 use app\admin\traits\SystemTimeTrait;
 use app\admin\traits\UserTrait;
-use app\common\model\Base;
+use app\common\model\BaseModel;
 use app\constants\Common;
 use traits\model\SoftDelete;
 
-class User extends Base
+class UserModel extends BaseModel
 {
     use SoftDelete;
     use UserTrait;

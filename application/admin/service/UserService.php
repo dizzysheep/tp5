@@ -2,7 +2,7 @@
 
 namespace app\admin\service;
 
-use app\admin\model\User;
+use app\admin\model\UserModel;
 use think\Session;
 
 class UserService
@@ -18,7 +18,7 @@ class UserService
         Session::set('username', $userInfo->username);
 
         //更新用户登录最后登录时间
-        User::where('user_id', $userInfo->user_id)
+        UserModel::where('user_id', $userInfo->user_id)
             ->update(['last_login_time' => date('Y-m-d H:i:s')]);
     }
 }

@@ -10,6 +10,7 @@ namespace app\admin\service;
 
 
 use app\admin\model\Menu;
+use app\admin\model\MenuModel;
 use app\constants\ErrorCode;
 use Exception;
 
@@ -24,7 +25,7 @@ class MenuService
     public function save($data)
     {
         // 启动事务
-        $menuModel = new Menu();
+        $menuModel = new MenuModel();
         $menuModel->startTrans();
 
         try {

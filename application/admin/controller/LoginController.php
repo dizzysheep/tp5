@@ -2,7 +2,6 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\User;
 use app\common\controller\BaseController;
 use app\constants\ErrorCode;
 use app\Func;
@@ -32,7 +31,7 @@ class LoginController extends BaseController
         }
 
         //查询用户信息
-        $userInfo = (new User())->where('username', $data['username'])->find();
+        $userInfo = model('user')->where('username', $data['username'])->find();
         if (empty($userInfo)) {
             errorJson(ErrorCode::PARAM_INVALID, '用户信息不存在');
         }
@@ -43,7 +42,7 @@ class LoginController extends BaseController
         }
 
         //登录逻辑处理
-        Func::loadService('user')->login($userInfo);
+        service('user')->login($userInfo);
 
         successJson('登录成功');
     }

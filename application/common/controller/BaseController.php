@@ -2,10 +2,9 @@
 
 namespace app\common\controller;
 
-use app\admin\model\User;
+use app\admin\model\UserModel;
 use app\constants\Common;
 use app\constants\ErrorCode;
-use app\Func;
 use think\Controller;
 use think\Session;
 
@@ -70,7 +69,7 @@ class BaseController extends Controller
         $this->userId = Session::get('user_id');
 
         //查询用户信息
-        $this->userInfo = User::get($this->userId);
+        $this->userInfo = UserModel::get($this->userId);
     }
 
     /**
