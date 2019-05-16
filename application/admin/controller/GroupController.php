@@ -8,13 +8,13 @@
 
 namespace app\admin\controller;
 
-use app\common\controller\Base;
+use app\common\controller\BaseController;
 use app\constants\Common;
 use app\constants\ErrorCode;
 use app\admin\model\Group as GroupModel;
 use app\Func;
 
-class Group extends Base
+class GroupController extends BaseController
 {
     /**
      * @desc 用户组model

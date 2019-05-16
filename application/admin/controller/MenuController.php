@@ -9,11 +9,11 @@
 namespace app\admin\controller;
 
 
-use app\common\controller\Base;
+use app\common\controller\BaseController;
 use app\constants\ErrorCode;
 use app\Func;
 
-class Menu extends Base
+class MenuController extends BaseController
 {
     /**
      * @var \app\admin\model\menu

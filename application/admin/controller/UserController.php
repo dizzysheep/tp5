@@ -2,12 +2,12 @@
 
 namespace app\admin\controller;
 
-use app\common\controller\Base;
+use app\common\controller\BaseController;
 use app\constants\Common;
 use app\constants\ErrorCode;
 use think\Request;
 
-class User extends Base
+class UserController extends BaseController
 {
     /**
      * @desc 用户组model

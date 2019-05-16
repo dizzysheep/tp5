@@ -3,13 +3,13 @@
 namespace app\admin\controller;
 
 use app\admin\model\User;
-use app\common\controller\Base;
+use app\common\controller\BaseController;
 use app\constants\ErrorCode;
 use app\Func;
 use think\Request;
 use think\Session;
 
-class Login extends Base
+class LoginController extends BaseController
 {
     protected $checkLogin = false;
 

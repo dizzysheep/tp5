@@ -9,10 +9,10 @@
 namespace app\admin\controller;
 
 
-use app\common\controller\Base;
+use app\common\controller\BaseController;
 use app\constants\ErrorCode;
 
-class ArticleCate extends Base
+class ArticleCateController extends BaseController
 {
     public function list()
     {

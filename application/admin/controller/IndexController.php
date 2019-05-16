@@ -9,9 +9,9 @@
 namespace app\admin\controller;
 
 
-use app\common\controller\Base;
+use app\common\controller\BaseController;
 
-class Index extends Base
+class IndexController extends BaseController
 {
     public function index()
     {

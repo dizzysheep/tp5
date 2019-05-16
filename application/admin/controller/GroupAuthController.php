@@ -9,12 +9,12 @@
 namespace app\admin\controller;
 
 
-use app\common\controller\Base;
+use app\common\controller\BaseController;
 use app\constants\ErrorCode;
 use app\Func;
 
 
-class GroupAuth extends Base
+class GroupAuthController extends BaseController
 {
     /**
      * @desc 用户组model

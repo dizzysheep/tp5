@@ -9,7 +9,7 @@ use app\Func;
 use think\Controller;
 use think\Session;
 
-class Base extends Controller
+class BaseController extends Controller
 {
     /**
      * @desc 是否需要登录
