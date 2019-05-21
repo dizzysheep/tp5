@@ -85,6 +85,9 @@ class BaseController extends Controller
         //拼装url
         $url = "/" . trim($this->request->path(), "/");
         $menu = model('menu')->getByUrl($url);
+        if (empty($menu)) {
+            errorJson(ErrorCode::NO_AUTH, '没有权限');
+        }
 
         //不检验权限
         if ($menu->check_auth == Common::SWITCH_CLONE) {
