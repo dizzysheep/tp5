@@ -75,36 +75,42 @@ class Request
     protected $langset;
 
     /**
+     * @desc 请求唯一码
+     * @var
+     */
+    public $uniqueNo;
+
+    /**
      * @var array 请求参数
      */
-    protected $param   = [];
-    protected $get     = [];
-    protected $post    = [];
+    protected $param = [];
+    protected $get = [];
+    protected $post = [];
     protected $request = [];
-    protected $route   = [];
+    protected $route = [];
     protected $put;
     protected $session = [];
-    protected $file    = [];
-    protected $cookie  = [];
-    protected $server  = [];
-    protected $header  = [];
+    protected $file = [];
+    protected $cookie = [];
+    protected $server = [];
+    protected $header = [];
 
     /**
      * @var array 资源类型
      */
     protected $mimeType = [
-        'xml'   => 'application/xml,text/xml,application/x-xml',
-        'json'  => 'application/json,text/x-json,application/jsonrequest,text/json',
-        'js'    => 'text/javascript,application/javascript,application/x-javascript',
-        'css'   => 'text/css',
-        'rss'   => 'application/rss+xml',
-        'yaml'  => 'application/x-yaml,text/yaml',
-        'atom'  => 'application/atom+xml',
-        'pdf'   => 'application/pdf',
-        'text'  => 'text/plain',
+        'xml' => 'application/xml,text/xml,application/x-xml',
+        'json' => 'application/json,text/x-json,application/jsonrequest,text/json',
+        'js' => 'text/javascript,application/javascript,application/x-javascript',
+        'css' => 'text/css',
+        'rss' => 'application/rss+xml',
+        'yaml' => 'application/x-yaml,text/yaml',
+        'atom' => 'application/atom+xml',
+        'pdf' => 'application/pdf',
+        'text' => 'text/plain',
         'image' => 'image/png,image/jpg,image/jpeg,image/pjpeg,image/gif,image/webp,image/*',
-        'csv'   => 'text/csv',
-        'html'  => 'text/html,application/xhtml+xml,*/*',
+        'csv' => 'text/csv',
+        'html' => 'text/html,application/xhtml+xml,*/*',
     ];
 
     protected $content;
@@ -145,6 +151,9 @@ class Request
 
         // 保存 php://input
         $this->input = file_get_contents('php://input');
+
+        //设置唯一请求码
+        $this->setUniqueNo();
     }
 
     public function __call($method, $args)
@@ -160,8 +169,8 @@ class Request
     /**
      * Hook 方法注入
      * @access public
-     * @param string|array $method   方法名
-     * @param mixed        $callback callable
+     * @param string|array $method 方法名
+     * @param mixed $callback callable
      * @return void
      */
     public static function hook($method, $callback = null)
@@ -202,27 +211,27 @@ class Request
     /**
      * 创建一个URL请求
      * @access public
-     * @param string $uri    URL地址
+     * @param string $uri URL地址
      * @param string $method 请求类型
-     * @param array  $params 请求参数
-     * @param array  $cookie
-     * @param array  $files
-     * @param array  $server
+     * @param array $params 请求参数
+     * @param array $cookie
+     * @param array $files
+     * @param array $server
      * @param string $content
      * @return \think\Request
      */
     public static function create($uri, $method = 'GET', $params = [], $cookie = [], $files = [], $server = [], $content = null)
     {
-        $server['PATH_INFO']      = '';
+        $server['PATH_INFO'] = '';
         $server['REQUEST_METHOD'] = strtoupper($method);
-        $info                     = parse_url($uri);
+        $info = parse_url($uri);
         if (isset($info['host'])) {
             $server['SERVER_NAME'] = $info['host'];
-            $server['HTTP_HOST']   = $info['host'];
+            $server['HTTP_HOST'] = $info['host'];
         }
         if (isset($info['scheme'])) {
             if ('https' === $info['scheme']) {
-                $server['HTTPS']       = 'on';
+                $server['HTTPS'] = 'on';
                 $server['SERVER_PORT'] = 443;
             } else {
                 unset($server['HTTPS']);
@@ -231,7 +240,7 @@ class Request
         }
         if (isset($info['port'])) {
             $server['SERVER_PORT'] = $info['port'];
-            $server['HTTP_HOST']   = $server['HTTP_HOST'] . ':' . $info['port'];
+            $server['HTTP_HOST'] = $server['HTTP_HOST'] . ':' . $info['port'];
         }
         if (isset($info['user'])) {
             $server['PHP_AUTH_USER'] = $info['user'];
@@ -242,16 +251,16 @@ class Request
         if (!isset($info['path'])) {
             $info['path'] = '/';
         }
-        $options                      = [];
+        $options = [];
         $options[strtolower($method)] = $params;
-        $queryString                  = '';
+        $queryString = '';
         if (isset($info['query'])) {
             parse_str(html_entity_decode($info['query']), $query);
             if (!empty($params)) {
-                $params      = array_replace($query, $params);
+                $params = array_replace($query, $params);
                 $queryString = http_build_query($params, '', '&');
             } else {
-                $params      = $query;
+                $params = $query;
                 $queryString = $info['query'];
             }
         } elseif (!empty($params)) {
@@ -262,19 +271,19 @@ class Request
             $options['get'] = isset($options['get']) ? array_merge($get, $options['get']) : $get;
         }
 
-        $server['REQUEST_URI']  = $info['path'] . ('' !== $queryString ? '?' . $queryString : '');
+        $server['REQUEST_URI'] = $info['path'] . ('' !== $queryString ? '?' . $queryString : '');
         $server['QUERY_STRING'] = $queryString;
-        $options['cookie']      = $cookie;
-        $options['param']       = $params;
-        $options['file']        = $files;
-        $options['server']      = $server;
-        $options['url']         = $server['REQUEST_URI'];
-        $options['baseUrl']     = $info['path'];
-        $options['pathinfo']    = '/' == $info['path'] ? '/' : ltrim($info['path'], '/');
-        $options['method']      = $server['REQUEST_METHOD'];
-        $options['domain']      = isset($info['scheme']) ? $info['scheme'] . '://' . $server['HTTP_HOST'] : '';
-        $options['content']     = $content;
-        self::$instance         = new self($options);
+        $options['cookie'] = $cookie;
+        $options['param'] = $params;
+        $options['file'] = $files;
+        $options['server'] = $server;
+        $options['url'] = $server['REQUEST_URI'];
+        $options['baseUrl'] = $info['path'];
+        $options['pathinfo'] = '/' == $info['path'] ? '/' : ltrim($info['path'], '/');
+        $options['method'] = $server['REQUEST_METHOD'];
+        $options['domain'] = isset($info['scheme']) ? $info['scheme'] . '://' . $server['HTTP_HOST'] : '';
+        $options['content'] = $content;
+        self::$instance = new self($options);
         return self::$instance;
     }
 
@@ -334,7 +343,7 @@ class Request
             $this->baseUrl = $url;
             return $this;
         } elseif (!$this->baseUrl) {
-            $str           = $this->url();
+            $str = $this->url();
             $this->baseUrl = strpos($str, '?') ? strstr($str, '?', true) : $str;
         }
         return true === $url ? $this->domain() . $this->baseUrl : $this->baseUrl;
@@ -415,7 +424,7 @@ class Request
                 foreach (Config::get('pathinfo_fetch') as $type) {
                     if (!empty($_SERVER[$type])) {
                         $_SERVER['PATH_INFO'] = (0 === strpos($_SERVER[$type], $_SERVER['SCRIPT_NAME'])) ?
-                        substr($_SERVER[$type], strlen($_SERVER['SCRIPT_NAME'])) : $_SERVER[$type];
+                            substr($_SERVER[$type], strlen($_SERVER['SCRIPT_NAME'])) : $_SERVER[$type];
                         break;
                     }
                 }
@@ -433,7 +442,7 @@ class Request
     public function path()
     {
         if (is_null($this->path)) {
-            $suffix   = Config::get('url_html_suffix');
+            $suffix = Config::get('url_html_suffix');
             $pathinfo = $this->pathinfo();
             if (false === $suffix) {
                 // 禁止伪静态访问
@@ -497,7 +506,7 @@ class Request
      * 设置资源类型
      * @access public
      * @param string|array $type 资源类型名
-     * @param string       $val  资源类型
+     * @param string $val 资源类型
      * @return void
      */
     public function mimeType($type, $val = '')
@@ -632,9 +641,9 @@ class Request
     /**
      * 获取当前请求的参数
      * @access public
-     * @param string|array $name    变量名
-     * @param mixed        $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string|array $name 变量名
+     * @param mixed $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function param($name = '', $default = null, $filter = '')
@@ -655,7 +664,7 @@ class Request
                     $vars = [];
             }
             // 当前请求参数和URL地址中的参数合并
-            $this->param      = array_merge($this->param, $this->get(false), $vars, $this->route(false));
+            $this->param = array_merge($this->param, $this->get(false), $vars, $this->route(false));
             $this->mergeParam = true;
         }
         if (true === $name) {
@@ -670,16 +679,16 @@ class Request
     /**
      * 设置获取路由参数
      * @access public
-     * @param string|array $name    变量名
-     * @param mixed        $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string|array $name 变量名
+     * @param mixed $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function route($name = '', $default = null, $filter = '')
     {
         if (is_array($name)) {
-            $this->param        = [];
-            $this->mergeParam   = false;
+            $this->param = [];
+            $this->mergeParam = false;
             return $this->route = array_merge($this->route, $name);
         }
         return $this->input($this->route, $name, $default, $filter);
@@ -688,9 +697,9 @@ class Request
     /**
      * 设置获取GET参数
      * @access public
-     * @param string|array $name    变量名
-     * @param mixed        $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string|array $name 变量名
+     * @param mixed $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function get($name = '', $default = null, $filter = '')
@@ -699,7 +708,7 @@ class Request
             $this->get = $_GET;
         }
         if (is_array($name)) {
-            $this->param      = [];
+            $this->param = [];
             $this->mergeParam = false;
             return $this->get = array_merge($this->get, $name);
         }
@@ -709,9 +718,9 @@ class Request
     /**
      * 设置获取POST参数
      * @access public
-     * @param string       $name    变量名
-     * @param mixed        $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string $name 变量名
+     * @param mixed $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function post($name = '', $default = null, $filter = '')
@@ -719,14 +728,14 @@ class Request
         if (empty($this->post)) {
             $content = $this->input;
             if (empty($_POST) && false !== strpos($this->contentType(), 'application/json')) {
-                $this->post = (array) json_decode($content, true);
+                $this->post = (array)json_decode($content, true);
             } else {
                 $this->post = $_POST;
             }
         }
         if (is_array($name)) {
-            $this->param       = [];
-            $this->mergeParam  = false;
+            $this->param = [];
+            $this->mergeParam = false;
             return $this->post = array_merge($this->post, $name);
         }
         return $this->input($this->post, $name, $default, $filter);
@@ -735,9 +744,9 @@ class Request
     /**
      * 设置获取PUT参数
      * @access public
-     * @param string|array $name    变量名
-     * @param mixed        $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string|array $name 变量名
+     * @param mixed $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function put($name = '', $default = null, $filter = '')
@@ -745,13 +754,13 @@ class Request
         if (is_null($this->put)) {
             $content = $this->input;
             if (false !== strpos($this->contentType(), 'application/json')) {
-                $this->put = (array) json_decode($content, true);
+                $this->put = (array)json_decode($content, true);
             } else {
                 parse_str($content, $this->put);
             }
         }
         if (is_array($name)) {
-            $this->param      = [];
+            $this->param = [];
             $this->mergeParam = false;
             return $this->put = is_null($this->put) ? $name : array_merge($this->put, $name);
         }
@@ -762,9 +771,9 @@ class Request
     /**
      * 设置获取DELETE参数
      * @access public
-     * @param string|array $name    变量名
-     * @param mixed        $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string|array $name 变量名
+     * @param mixed $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function delete($name = '', $default = null, $filter = '')
@@ -775,9 +784,9 @@ class Request
     /**
      * 设置获取PATCH参数
      * @access public
-     * @param string|array $name    变量名
-     * @param mixed        $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string|array $name 变量名
+     * @param mixed $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function patch($name = '', $default = null, $filter = '')
@@ -787,9 +796,9 @@ class Request
 
     /**
      * 获取request变量
-     * @param string       $name    数据名称
-     * @param string       $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string $name 数据名称
+     * @param string $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function request($name = '', $default = null, $filter = '')
@@ -798,8 +807,8 @@ class Request
             $this->request = $_REQUEST;
         }
         if (is_array($name)) {
-            $this->param          = [];
-            $this->mergeParam     = false;
+            $this->param = [];
+            $this->mergeParam = false;
             return $this->request = array_merge($this->request, $name);
         }
         return $this->input($this->request, $name, $default, $filter);
@@ -808,9 +817,9 @@ class Request
     /**
      * 获取session数据
      * @access public
-     * @param string|array $name    数据名称
-     * @param string       $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string|array $name 数据名称
+     * @param string $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function session($name = '', $default = null, $filter = '')
@@ -827,9 +836,9 @@ class Request
     /**
      * 获取cookie参数
      * @access public
-     * @param string|array $name    数据名称
-     * @param string       $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string|array $name 数据名称
+     * @param string $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function cookie($name = '', $default = null, $filter = '')
@@ -860,9 +869,9 @@ class Request
     /**
      * 获取server参数
      * @access public
-     * @param string|array $name    数据名称
-     * @param string       $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string|array $name 数据名称
+     * @param string $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function server($name = '', $default = null, $filter = '')
@@ -896,8 +905,8 @@ class Request
             $array = [];
             foreach ($files as $key => $file) {
                 if (is_array($file['name'])) {
-                    $item  = [];
-                    $keys  = array_keys($file);
+                    $item = [];
+                    $keys = array_keys($file);
                     $count = count($file['name']);
                     for ($i = 0; $i < $count; $i++) {
                         if (empty($file['tmp_name'][$i]) || !is_file($file['tmp_name'][$i])) {
@@ -938,9 +947,9 @@ class Request
 
     /**
      * 获取环境变量
-     * @param string|array $name    数据名称
-     * @param string       $default 默认值
-     * @param string|array $filter  过滤方法
+     * @param string|array $name 数据名称
+     * @param string $default 默认值
+     * @param string|array $filter 过滤方法
      * @return mixed
      */
     public function env($name = '', $default = null, $filter = '')
@@ -957,8 +966,8 @@ class Request
     /**
      * 设置或者获取当前的Header
      * @access public
-     * @param string|array $name    header名称
-     * @param string       $default 默认值
+     * @param string|array $name header名称
+     * @param string $default 默认值
      * @return string
      */
     public function header($name = '', $default = null)
@@ -971,7 +980,7 @@ class Request
                 $server = $this->server ?: $_SERVER;
                 foreach ($server as $key => $val) {
                     if (0 === strpos($key, 'HTTP_')) {
-                        $key          = str_replace('_', '-', strtolower(substr($key, 5)));
+                        $key = str_replace('_', '-', strtolower(substr($key, 5)));
                         $header[$key] = $val;
                     }
                 }
@@ -996,10 +1005,10 @@ class Request
 
     /**
      * 获取变量 支持过滤和默认值
-     * @param array        $data    数据源
-     * @param string|false $name    字段名
-     * @param mixed        $default 默认值
-     * @param string|array $filter  过滤函数
+     * @param array $data 数据源
+     * @param string|false $name 字段名
+     * @param mixed $default 默认值
+     * @param string|array $filter 过滤函数
      * @return mixed
      */
     public function input($data = [], $name = '', $default = null, $filter = '')
@@ -1008,7 +1017,7 @@ class Request
             // 获取原始数据
             return $data;
         }
-        $name = (string) $name;
+        $name = (string)$name;
         if ('' != $name) {
             // 解析name
             if (strpos($name, '/')) {
@@ -1070,7 +1079,7 @@ class Request
             if (is_string($filter) && false === strpos($filter, '/')) {
                 $filter = explode(',', $filter);
             } else {
-                $filter = (array) $filter;
+                $filter = (array)$filter;
             }
         }
 
@@ -1080,8 +1089,8 @@ class Request
 
     /**
      * 递归过滤给定的值
-     * @param mixed $value   键值
-     * @param mixed $key     键名
+     * @param mixed $value 键值
+     * @param mixed $key 键名
      * @param array $filters 过滤方法+默认值
      * @return mixed
      */
@@ -1139,25 +1148,25 @@ class Request
         switch (strtolower($type)) {
             // 数组
             case 'a':
-                $data = (array) $data;
+                $data = (array)$data;
                 break;
             // 数字
             case 'd':
-                $data = (int) $data;
+                $data = (int)$data;
                 break;
             // 浮点
             case 'f':
-                $data = (float) $data;
+                $data = (float)$data;
                 break;
             // 布尔
             case 'b':
-                $data = (boolean) $data;
+                $data = (boolean)$data;
                 break;
             // 字符串
             case 's':
             default:
                 if (is_scalar($data)) {
-                    $data = (string) $data;
+                    $data = (string)$data;
                 } else {
                     throw new \InvalidArgumentException('variable type error：' . gettype($data));
                 }
@@ -1167,9 +1176,9 @@ class Request
     /**
      * 是否存在某个请求参数
      * @access public
-     * @param string $name       变量名
-     * @param string $type       变量类型
-     * @param bool   $checkEmpty 是否检测空值
+     * @param string $name 变量名
+     * @param string $type 变量类型
+     * @param bool $checkEmpty 是否检测空值
      * @return mixed
      */
     public function has($name, $type = 'param', $checkEmpty = false)
@@ -1194,7 +1203,7 @@ class Request
      * 获取指定的参数
      * @access public
      * @param string|array $name 变量名
-     * @param string       $type 变量类型
+     * @param string $type 变量类型
      * @return mixed
      */
     public function only($name, $type = 'param')
@@ -1216,7 +1225,7 @@ class Request
      * 排除指定参数获取
      * @access public
      * @param string|array $name 变量名
-     * @param string       $type 变量类型
+     * @param string $type 变量类型
      * @return mixed
      */
     public function except($name, $type = 'param')
@@ -1263,12 +1272,12 @@ class Request
      */
     public function isAjax($ajax = false)
     {
-        $value  = $this->server('HTTP_X_REQUESTED_WITH', '', 'strtolower');
+        $value = $this->server('HTTP_X_REQUESTED_WITH', '', 'strtolower');
         $result = ('xmlhttprequest' == $value) ? true : false;
         if (true === $ajax) {
             return $result;
         } else {
-            $result           = $this->param(Config::get('var_ajax')) ? true : $result;
+            $result = $this->param(Config::get('var_ajax')) ? true : $result;
             $this->mergeParam = false;
             return $result;
         }
@@ -1286,7 +1295,7 @@ class Request
         if (true === $pjax) {
             return $result;
         } else {
-            $result           = $this->param(Config::get('var_pjax')) ? true : $result;
+            $result = $this->param(Config::get('var_pjax')) ? true : $result;
             $this->mergeParam = false;
             return $result;
         }
@@ -1295,12 +1304,12 @@ class Request
     /**
      * 获取客户端IP地址
      * @param integer $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
-     * @param boolean $adv  是否进行高级模式获取（有可能被伪装）
+     * @param boolean $adv 是否进行高级模式获取（有可能被伪装）
      * @return mixed
      */
     public function ip($type = 0, $adv = true)
     {
-        $type      = $type ? 1 : 0;
+        $type = $type ? 1 : 0;
         static $ip = null;
         if (null !== $ip) {
             return $ip[$type];
@@ -1328,7 +1337,7 @@ class Request
         }
         // IP地址合法验证
         $long = sprintf("%u", ip2long($ip));
-        $ip   = $long ? [$ip, $long] : ['0.0.0.0', 0];
+        $ip = $long ? [$ip, $long] : ['0.0.0.0', 0];
         return $ip[$type];
     }
 
@@ -1559,12 +1568,12 @@ class Request
      * 生成请求令牌
      * @access public
      * @param string $name 令牌名称
-     * @param mixed  $type 令牌生成方法
+     * @param mixed $type 令牌生成方法
      * @return string
      */
     public function token($name = '__token__', $type = 'md5')
     {
-        $type  = is_callable($type) ? $type : 'md5';
+        $type = is_callable($type) ? $type : 'md5';
         $token = call_user_func($type, $_SERVER['REQUEST_TIME_FLOAT']);
         if ($this->isAjax()) {
             header($name . ': ' . $token);
@@ -1576,16 +1585,16 @@ class Request
     /**
      * 设置当前地址的请求缓存
      * @access public
-     * @param string $key    缓存标识，支持变量规则 ，例如 item/:name/:id
-     * @param mixed  $expire 缓存有效期
-     * @param array  $except 缓存排除
-     * @param string $tag    缓存标签
+     * @param string $key 缓存标识，支持变量规则 ，例如 item/:name/:id
+     * @param mixed $expire 缓存有效期
+     * @param array $except 缓存排除
+     * @param string $tag 缓存标签
      * @return void
      */
     public function cache($key, $expire = null, $except = [], $tag = null)
     {
         if (!is_array($except)) {
-            $tag    = $except;
+            $tag = $except;
             $except = [];
         }
 
@@ -1639,7 +1648,7 @@ class Request
                 throw new \think\exception\HttpResponseException($response);
             } elseif (Cache::has($key)) {
                 list($content, $header) = Cache::get($key);
-                $response               = Response::create($content)->header($header);
+                $response = Response::create($content)->header($header);
                 throw new \think\exception\HttpResponseException($response);
             } else {
                 $this->cache = [$key, $expire, $tag];
@@ -1661,7 +1670,7 @@ class Request
      * 设置当前请求绑定的对象实例
      * @access public
      * @param string|array $name 绑定的对象标识
-     * @param mixed        $obj  绑定的对象实例
+     * @param mixed $obj 绑定的对象实例
      * @return mixed
      */
     public function bind($name, $obj = null)
@@ -1686,5 +1695,13 @@ class Request
     public function __isset($name)
     {
         return isset($this->bind[$name]);
+    }
+
+    /**
+     * @desc 设置唯一码
+     */
+    public function setUniqueNo()
+    {
+        $this->uniqueNo = sprintf('%s-%s-%s', date('YmdHis'), getmypid(), uniqid());
     }
 }

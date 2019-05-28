@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\controller\BaseController;
+use app\common\AppLog;
 use app\constants\Common;
 use app\constants\ErrorCode;
 use think\Request;

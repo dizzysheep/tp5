@@ -6,7 +6,7 @@
  * Time: 19:54
  */
 
-namespace app;
+namespace app\common;
 
 
 class Func
