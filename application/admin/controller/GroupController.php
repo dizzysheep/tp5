@@ -33,12 +33,8 @@ class GroupController extends BaseController
     /**
      * @desc 用户组列表
      * @link /group/groupList
-     * @throws \think\Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
-    public function groupList()
+    public function group_list()
     {
         $params = [];
 
@@ -56,9 +52,9 @@ class GroupController extends BaseController
 
     /**
      * @desc 用户组添加
-     * @link /group/groupAdd
+     * @link /group/group_add
      */
-    public function groupAdd()
+    public function group_add()
     {
         //参数校验
         $data = $this->request->param();
@@ -76,7 +72,7 @@ class GroupController extends BaseController
      * @desc 用户组编辑
      * @link /group/groupEdit
      */
-    public function groupEdit()
+    public function group_edit()
     {
         //参数校验
         $data = $this->request->param();

@@ -12,7 +12,7 @@ namespace app\admin\validate;
 use app\common\validate\BaseValid;
 use app\constants\Common;
 
-class ArticleCate extends BaseValid
+class ArticleCateValidate extends BaseValid
 {
     protected $rule = [
         'cate_name' => 'require|maxLength:64',

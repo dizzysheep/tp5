@@ -29,13 +29,13 @@ class UserController extends BaseController
 
     /**
      * @desc 查询类标数据
-     * @link /user/userList
+     * @link /user/user_list
      * @throws \think\Exception
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function userList()
+    public function user_list()
     {
         //用户搜索条件处理
         $params = $this->request->param();
@@ -55,9 +55,9 @@ class UserController extends BaseController
 
     /**
      * @desc 用户添加
-     * @link /user/userAdd
+     * @link /user/user_add
      */
-    public function userAdd()
+    public function user_add()
     {
         //获取参数
         $data = $this->request->param();
@@ -73,11 +73,11 @@ class UserController extends BaseController
 
     /**
      * @desc 用户编辑
-     * @link /user/userEdit
+     * @link /user/user_edit
      * @param Request $request
      * @throws \think\exception\DbException
      */
-    public function userEdit(Request $request)
+    public function user_edit(Request $request)
     {
         //获取参数
         $data = $this->request->param();
@@ -97,10 +97,10 @@ class UserController extends BaseController
 
     /**
      * @desc 用户状态切换
-     * @link /user/statusSwitch
+     * @link /user/status_switch
      * @throws \think\exception\DbException
      */
-    public function statusSwitch()
+    public function status_switch()
     {
         //参数校验
         $data['status'] = $this->request->param('status');
@@ -128,12 +128,12 @@ class UserController extends BaseController
 
     /**
      * @desc 用户删除
-     * @link /user/userDel
+     * @link /user/user_del
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function userDel()
+    public function user_del()
     {
         $userId = $this->request->param('user_id');
         $user = $this->_userInfoExist($userId);

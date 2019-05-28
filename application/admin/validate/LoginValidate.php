@@ -5,7 +5,7 @@ namespace app\admin\validate;
 
 use app\common\validate\BaseValid;
 
-class LoginValid extends BaseValid
+class LoginValidate extends BaseValid
 {
     protected $rule = [
         'username' => 'require|max:32',

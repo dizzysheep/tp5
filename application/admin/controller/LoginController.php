@@ -24,7 +24,7 @@ class LoginController extends BaseController
         $data['password'] = $request->param('password');
 
         //数据验证
-        $result = $this->validate($data, 'app\admin\validate\LoginValid');
+        $result = $this->validate($data, 'app\admin\validate\LoginValidate');
         if ($result !== true) {
             errorJson(ErrorCode::PARAM_INVALID, $result);
         }

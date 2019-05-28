@@ -32,9 +32,9 @@ class MenuController extends BaseController
 
     /**
      * @desc 添加菜单
-     * @link /menu/menuAdd
+     * @link /menu/menu_add
      */
-    public function menuAdd()
+    public function menu_add()
     {
         //获取参数
         $data = $this->request->param();
@@ -50,9 +50,9 @@ class MenuController extends BaseController
 
     /**
      * @desc 添加菜单
-     * @link /menu/menuEdit
+     * @link /menu/menu_edit
      */
-    public function menuEdit()
+    public function menu_edit()
     {
         //获取参数
         $data = $this->request->param();

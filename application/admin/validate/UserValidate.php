@@ -6,7 +6,7 @@ namespace app\admin\validate;
 use app\common\validate\BaseValid;
 use app\constants\Common;
 
-class User extends BaseValid
+class UserValidate extends BaseValid
 {
     protected $rule = [
         'username' => 'require|alphaDash|unique:user|maxLength:32',
