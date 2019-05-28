@@ -17,7 +17,7 @@ class GroupAuthController extends BaseController
 {
     /**
      * @desc 用户组model
-     * @var \app\admin\model\User
+     * @var \app\admin\model\GroupAuthModel
      */
     protected $model;
 

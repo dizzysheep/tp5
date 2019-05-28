@@ -15,7 +15,7 @@ use app\constants\ErrorCode;
 class MenuController extends BaseController
 {
     /**
-     * @var \app\admin\model\menu
+     * @var \app\admin\model\MenuModel
      */
     protected $model;
 

@@ -16,7 +16,7 @@ class GroupController extends BaseController
 {
     /**
      * @desc 用户组model
-     * @var \app\admin\model\Group
+     * @var \app\admin\model\GroupModel
      */
     protected $model;
 
