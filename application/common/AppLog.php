@@ -26,9 +26,9 @@ class AppLog
      * @param $data
      * @param $filePath
      */
-    public static function warning($msg, array $data, $filePath = '')
+    public static function notice($msg, array $data, $filePath = '')
     {
-        self::record('warning', $msg, $data, $filePath);
+        self::record(Log::NOTICE, $msg, $data, $filePath);
     }
 
     /**
@@ -39,7 +39,7 @@ class AppLog
      */
     public static function info($msg, array $data, $filePath = '')
     {
-        self::record('info', $msg, $data, $filePath);
+        self::record(Log::INFO, $msg, $data, $filePath);
     }
 
     /**
@@ -50,7 +50,18 @@ class AppLog
      */
     public static function debug($msg, array $data, $filePath = '')
     {
-        self::record('debug', $msg, $data, $filePath);
+        self::record(Log::DEBUG, $msg, $data, $filePath);
+    }
+
+    /**
+     * @desc 写入信息
+     * @param $msg
+     * @param array $data
+     * @param string $filePath
+     */
+    public static function sql($msg, array $data, $filePath = '')
+    {
+        self::record(Log::SQL, $msg, $data, $filePath);
     }
 
     /**
